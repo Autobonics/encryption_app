@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "367377580239",
+    "project_id": "secret-app-6df09",
+    "storage_bucket": "secret-app-6df09.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:367377580239:android:89a6fc262e27e9d5a177ba",
+        "android_client_info": {
+          "package_name": "com.example.secret_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "367377580239-oos5rnslm37a26799cbnjpdc11duchbh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYUDlxuueOjafIVYDk9AFcdY2aY2YcRuI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "367377580239-5f3gdlodhmgigqqlog0aesjkm21euku0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "367377580239-smnvnuluo8et8pdo8ceb1s4s86tufgen.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.secretApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
