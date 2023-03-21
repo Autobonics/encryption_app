@@ -28,10 +28,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Secure App',
+      debugShowCheckedModeBanner: false,
       theme: Theme.of(context).copyWith(
         primaryColor: kcBackgroundColor,
         focusColor: kcPrimaryColor,
+        colorScheme: const ColorScheme(brightness: Brightness.light, primary: kcPrimaryColor, onPrimary: kcDarkGreyColor, secondary: kcPrimaryColorDark, onSecondary: kcLightGrey, error: Colors.red, onError: Colors.white, background: kcVeryLightGrey, onBackground: kcPrimaryColor, surface: Colors.white, onSurface: kcDarkGreyColor,),
         textTheme: Theme.of(context).textTheme.apply(
               bodyColor: Colors.black,
             ),
