@@ -16,10 +16,11 @@ class AppUser {
         email = data['email'],
         userRole = data['userRole'];
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson(keyword) {
     return {
       'id': id,
       'fullName': fullName,
+      'keyword': keyword,
       'email': email,
       'userRole': userRole,
     };

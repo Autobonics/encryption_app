@@ -7,6 +7,8 @@ import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:secret_app/ui/views/login/login_view.dart';
 import 'package:secret_app/ui/views/settings/settings_view.dart';
+import 'package:secret_app/services/firestore_service.dart';
+import 'package:secret_app/services/user_service.dart';
 // @stacked-import
 
 @StackedApp(
@@ -22,7 +24,9 @@ import 'package:secret_app/ui/views/settings/settings_view.dart';
     LazySingleton(classType: DialogService),
     LazySingleton(classType: NavigationService),
     LazySingleton(classType: FirebaseAuthenticationService),
-    // @stacked-service
+    LazySingleton(classType: FirestoreService),
+    LazySingleton(classType: UserService),
+// @stacked-service
   ],
   bottomsheets: [
     StackedBottomsheet(classType: NoticeSheet),

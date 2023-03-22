@@ -2,6 +2,8 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:secret_app/app/app.locator.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:secret_app/services/firestore_service.dart';
+import 'package:secret_app/services/user_service.dart';
 // @stacked-import
 
 import 'test_helpers.mocks.dart';
@@ -10,13 +12,17 @@ import 'test_helpers.mocks.dart';
   MockSpec<NavigationService>(onMissingStub: OnMissingStub.returnDefault),
   MockSpec<BottomSheetService>(onMissingStub: OnMissingStub.returnDefault),
   MockSpec<DialogService>(onMissingStub: OnMissingStub.returnDefault),
-  // @stacked-mock-spec
+  MockSpec<FirestoreService>(onMissingStub: OnMissingStub.returnDefault),
+  MockSpec<UserService>(onMissingStub: OnMissingStub.returnDefault),
+// @stacked-mock-spec
 ])
 void registerServices() {
   getAndRegisterNavigationService();
   getAndRegisterBottomSheetService();
   getAndRegisterDialogService();
-  // @stacked-mock-register
+  getAndRegisterFirestoreService();
+  getAndRegisterUserService();
+// @stacked-mock-register
 }
 
 MockNavigationService getAndRegisterNavigationService() {
@@ -69,6 +75,19 @@ MockDialogService getAndRegisterDialogService() {
   return service;
 }
 
+MockFirestoreService getAndRegisterFirestoreService() {
+  _removeRegistrationIfExists<FirestoreService>();
+  final service = MockFirestoreService();
+  locator.registerSingleton<FirestoreService>(service);
+  return service;
+}
+
+MockUserService getAndRegisterUserService() {
+  _removeRegistrationIfExists<UserService>();
+  final service = MockUserService();
+  locator.registerSingleton<UserService>(service);
+  return service;
+}
 // @stacked-mock-create
 
 void _removeRegistrationIfExists<T extends Object>() {
