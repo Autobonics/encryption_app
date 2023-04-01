@@ -654,16 +654,22 @@ class MockFirestoreService extends _i1.Mock implements _i7.FirestoreService {
         ),
       ) as _i2.CollectionReference<Object?>);
   @override
-  _i5.Future<void> createUser({required _i8.AppUser? user}) =>
+  _i5.Future<bool> createUser({
+    required _i8.AppUser? user,
+    required dynamic keyword,
+  }) =>
       (super.noSuchMethod(
         Invocation.method(
           #createUser,
           [],
-          {#user: user},
+          {
+            #user: user,
+            #keyword: keyword,
+          },
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
   @override
   _i5.Future<_i8.AppUser?> getUser({required String? userId}) =>
       (super.noSuchMethod(
@@ -680,4 +686,22 @@ class MockFirestoreService extends _i1.Mock implements _i7.FirestoreService {
 /// A class which mocks [UserService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockUserService extends _i1.Mock implements _i9.UserService {}
+class MockUserService extends _i1.Mock implements _i9.UserService {
+  @override
+  void setUser(_i8.AppUser? user) => super.noSuchMethod(
+        Invocation.method(
+          #setUser,
+          [user],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  _i5.Future<bool> fetchUser() => (super.noSuchMethod(
+        Invocation.method(
+          #fetchUser,
+          [],
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+}

@@ -9,6 +9,7 @@ import 'package:secret_app/ui/views/login/login_view.dart';
 import 'package:secret_app/ui/views/settings/settings_view.dart';
 import 'package:secret_app/services/firestore_service.dart';
 import 'package:secret_app/services/user_service.dart';
+import 'package:secret_app/ui/views/profile/profile_view.dart';
 // @stacked-import
 
 @StackedApp(
@@ -17,6 +18,7 @@ import 'package:secret_app/services/user_service.dart';
     MaterialRoute(page: StartupView),
     MaterialRoute(page: LoginView),
     MaterialRoute(page: SettingsView),
+    MaterialRoute(page: ProfileView),
 // @stacked-route
   ],
   dependencies: [

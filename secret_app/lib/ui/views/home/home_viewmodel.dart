@@ -8,6 +8,7 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class HomeViewModel extends BaseViewModel {
+  final _navigationService = locator<NavigationService>();
   final _dialogService = locator<DialogService>();
   final _bottomSheetService = locator<BottomSheetService>();
   final _userService = locator<UserService>();
@@ -17,6 +18,15 @@ class HomeViewModel extends BaseViewModel {
   String get counterLabel => 'Counter is: $_counter';
 
   int _counter = 0;
+
+  void onModelReady() async {
+    setBusy(true);
+    bool isUser = await _userService.fetchUser();
+    if (!isUser) {
+      // _navigationService.na
+    }
+    setBusy(false);
+  }
 
   void incrementCounter() {
     _counter++;

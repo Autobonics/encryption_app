@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
-
 import 'login_viewmodel.dart';
 
 class LoginView extends StackedView<LoginViewModel> {
