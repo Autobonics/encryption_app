@@ -4,15 +4,12 @@ import 'package:secret_app/app/app.logger.dart';
 import 'package:secret_app/constants/app_keys.dart';
 import 'package:secret_app/models/appuser.dart';
 import 'package:secret_app/models/chat.dart';
-import 'package:secret_app/services/user_service.dart';
+import 'package:secret_app/models/chat_message.dart';
+import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 
 class FirestoreService {
   final log = getLogger('FirestoreApi');
-
-  String? _curentUserUid = "";
-  void setUserUid(String uid) {
-    _curentUserUid = uid;
-  }
+  final _authenticationService = locator<FirebaseAuthenticationService>();
 
   final CollectionReference _usersCollection =
       FirebaseFirestore.instance.collection(UsersFirestoreKey);
@@ -104,9 +101,12 @@ class FirestoreService {
   }
 
   Stream<List<Chat>> getChats() {
+    log.i("Getting chats: ${_authenticationService.currentUser!.uid}");
     try {
       return _chatsCollectionReference
-          .where('userIds', arrayContains: _curentUserUid!)
+          .where('members',
+              arrayContains: _authenticationService.currentUser!.uid)
+          .orderBy("createdAt", descending: true)
           .snapshots()
           .map((QuerySnapshot querySnapshot) => querySnapshot.docs
               .map((DocumentSnapshot documentSnapshot) => Chat.fromJson(
@@ -116,5 +116,21 @@ class FirestoreService {
       log.e('getChats Error: ${e.toString()}');
       rethrow;
     }
+  }
+
+  ///Chat Messages
+  Stream<List<ChatMessage>> listenToChatMessages(String chatId) {
+    final query = _chatsCollectionReference
+        .doc(chatId)
+        .collection('messages')
+        .orderBy('timestamp', descending: true)
+        .limit(50);
+
+    return query.snapshots().map((snapshot) {
+      return snapshot.docs
+          .map((DocumentSnapshot doc) =>
+              ChatMessage.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+    });
   }
 }

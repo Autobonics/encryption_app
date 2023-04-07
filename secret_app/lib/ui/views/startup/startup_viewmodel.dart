@@ -10,12 +10,10 @@ class StartupViewModel extends BaseViewModel {
   final _navigationService = locator<NavigationService>();
   final _userService = locator<UserService>();
   final FirestoreService _firestoreService = FirestoreService();
-  final _authenticationService = locator<FirebaseAuthenticationService>();
 
   // Place anything here that needs to happen before we get into the application
   Future runStartupLogic() async {
     if (_userService.hasLoggedInUser) {
-      _firestoreService.setUserUid(_authenticationService.currentUser!.uid);
       await _userService.fetchUser();
       _navigationService.replaceWithHomeView();
     } else {

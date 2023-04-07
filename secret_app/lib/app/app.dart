@@ -11,6 +11,7 @@ import 'package:secret_app/services/firestore_service.dart';
 import 'package:secret_app/services/user_service.dart';
 import 'package:secret_app/ui/views/profile/profile_view.dart';
 import 'package:secret_app/ui/bottom_sheets/alert/alert_sheet.dart';
+import 'package:secret_app/ui/views/chat/chat_view.dart';
 // @stacked-import
 
 @StackedApp(
@@ -20,6 +21,7 @@ import 'package:secret_app/ui/bottom_sheets/alert/alert_sheet.dart';
     MaterialRoute(page: LoginView),
     MaterialRoute(page: SettingsView),
     MaterialRoute(page: ProfileView),
+    MaterialRoute(page: ChatView),
 // @stacked-route
   ],
   dependencies: [

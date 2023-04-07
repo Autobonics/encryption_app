@@ -6,12 +6,13 @@
 import 'dart:async' as _i5;
 import 'dart:ui' as _i6;
 
-import 'package:cloud_firestore/cloud_firestore.dart' as _i2;
 import 'package:flutter/material.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:secret_app/models/appuser.dart' as _i8;
+import 'package:secret_app/models/chat.dart' as _i2;
+import 'package:secret_app/models/chat_message.dart' as _i9;
 import 'package:secret_app/services/firestore_service.dart' as _i7;
-import 'package:secret_app/services/user_service.dart' as _i9;
+import 'package:secret_app/services/user_service.dart' as _i10;
 import 'package:stacked_services/stacked_services.dart' as _i3;
 
 // ignore_for_file: type=lint
@@ -25,9 +26,8 @@ import 'package:stacked_services/stacked_services.dart' as _i3;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeCollectionReference_0<T extends Object?> extends _i1.SmartFake
-    implements _i2.CollectionReference<T> {
-  _FakeCollectionReference_0(
+class _FakeChat_0 extends _i1.SmartFake implements _i2.Chat {
+  _FakeChat_0(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -510,8 +510,7 @@ class MockDialogService extends _i1.Mock implements _i3.DialogService {
       _i4.BuildContext,
       _i3.DialogRequest<dynamic>,
       dynamic Function(_i3.DialogResponse<dynamic>),
-    )?
-        builder,
+    )? builder,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -643,18 +642,6 @@ class MockDialogService extends _i1.Mock implements _i3.DialogService {
 /// See the documentation for Mockito's code generation for more information.
 class MockFirestoreService extends _i1.Mock implements _i7.FirestoreService {
   @override
-  _i2.CollectionReference<Object?> get _usersCollection => (super.noSuchMethod(
-        Invocation.getter(#usersCollection),
-        returnValue: _FakeCollectionReference_0<Object?>(
-          this,
-          Invocation.getter(#usersCollection),
-        ),
-        returnValueForMissingStub: _FakeCollectionReference_0<Object?>(
-          this,
-          Invocation.getter(#usersCollection),
-        ),
-      ) as _i2.CollectionReference<Object?>);
-  @override
   _i5.Future<bool> createUser({
     required _i8.AppUser? user,
     required dynamic keyword,
@@ -682,12 +669,81 @@ class MockFirestoreService extends _i1.Mock implements _i7.FirestoreService {
         returnValue: _i5.Future<_i8.AppUser?>.value(),
         returnValueForMissingStub: _i5.Future<_i8.AppUser?>.value(),
       ) as _i5.Future<_i8.AppUser?>);
+  @override
+  _i5.Future<List<_i8.AppUser>> searchUsers(String? keyword) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #searchUsers,
+          [keyword],
+        ),
+        returnValue: _i5.Future<List<_i8.AppUser>>.value(<_i8.AppUser>[]),
+        returnValueForMissingStub:
+            _i5.Future<List<_i8.AppUser>>.value(<_i8.AppUser>[]),
+      ) as _i5.Future<List<_i8.AppUser>>);
+  @override
+  _i5.Future<_i2.Chat> createChat(_i2.Chat? chat) => (super.noSuchMethod(
+        Invocation.method(
+          #createChat,
+          [chat],
+        ),
+        returnValue: _i5.Future<_i2.Chat>.value(_FakeChat_0(
+          this,
+          Invocation.method(
+            #createChat,
+            [chat],
+          ),
+        )),
+        returnValueForMissingStub: _i5.Future<_i2.Chat>.value(_FakeChat_0(
+          this,
+          Invocation.method(
+            #createChat,
+            [chat],
+          ),
+        )),
+      ) as _i5.Future<_i2.Chat>);
+  @override
+  _i5.Future<void> updateChat(_i2.Chat? chat) => (super.noSuchMethod(
+        Invocation.method(
+          #updateChat,
+          [chat],
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
+  @override
+  _i5.Future<void> deleteChat(_i2.Chat? chat) => (super.noSuchMethod(
+        Invocation.method(
+          #deleteChat,
+          [chat],
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
+  @override
+  _i5.Stream<List<_i2.Chat>> getChats() => (super.noSuchMethod(
+        Invocation.method(
+          #getChats,
+          [],
+        ),
+        returnValue: _i5.Stream<List<_i2.Chat>>.empty(),
+        returnValueForMissingStub: _i5.Stream<List<_i2.Chat>>.empty(),
+      ) as _i5.Stream<List<_i2.Chat>>);
+  @override
+  _i5.Stream<List<_i9.ChatMessage>> listenToChatMessages(String? chatId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #listenToChatMessages,
+          [chatId],
+        ),
+        returnValue: _i5.Stream<List<_i9.ChatMessage>>.empty(),
+        returnValueForMissingStub: _i5.Stream<List<_i9.ChatMessage>>.empty(),
+      ) as _i5.Stream<List<_i9.ChatMessage>>);
 }
 
 /// A class which mocks [UserService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockUserService extends _i1.Mock implements _i9.UserService {
+class MockUserService extends _i1.Mock implements _i10.UserService {
   @override
   bool get hasLoggedInUser => (super.noSuchMethod(
         Invocation.getter(#hasLoggedInUser),
@@ -713,12 +769,12 @@ class MockUserService extends _i1.Mock implements _i9.UserService {
         returnValueForMissingStub: _i5.Future<String?>.value(),
       ) as _i5.Future<String?>);
   @override
-  _i5.Future<bool> fetchUser() => (super.noSuchMethod(
+  _i5.Future<_i8.AppUser?> fetchUser() => (super.noSuchMethod(
         Invocation.method(
           #fetchUser,
           [],
         ),
-        returnValue: _i5.Future<bool>.value(false),
-        returnValueForMissingStub: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
+        returnValue: _i5.Future<_i8.AppUser?>.value(),
+        returnValueForMissingStub: _i5.Future<_i8.AppUser?>.value(),
+      ) as _i5.Future<_i8.AppUser?>);
 }

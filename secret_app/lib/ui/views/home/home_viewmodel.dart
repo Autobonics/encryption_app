@@ -56,6 +56,6 @@ class HomeViewModel extends StreamViewModel<List<Chat>> {
   Stream<List<Chat>> get stream => _firestoreService.getChats();
 
   Future<void> navigateToChat(Chat chat) async {
-    // Navigate to chat view
+    _navigationService.navigateToChatView(chat: chat);
   }
 }
