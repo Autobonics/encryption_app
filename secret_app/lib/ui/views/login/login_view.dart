@@ -39,6 +39,13 @@ class LoginView extends StackedView<LoginViewModel> {
                 onPressed: viewModel.login,
               ),
             ),
+            if (viewModel.isBusy)
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                ),
+              )
           ],
         ),
       ),

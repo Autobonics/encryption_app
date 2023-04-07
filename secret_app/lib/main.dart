@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         colorScheme: const ColorScheme(
           brightness: Brightness.light,
           primary: kcPrimaryColor,
-          onPrimary: kcDarkGreyColor,
+          onPrimary: Colors.white,
           secondary: kcPrimaryColorDark,
           onSecondary: kcLightGrey,
           error: Colors.red,

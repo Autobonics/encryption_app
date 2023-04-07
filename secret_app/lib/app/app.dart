@@ -10,6 +10,7 @@ import 'package:secret_app/ui/views/settings/settings_view.dart';
 import 'package:secret_app/services/firestore_service.dart';
 import 'package:secret_app/services/user_service.dart';
 import 'package:secret_app/ui/views/profile/profile_view.dart';
+import 'package:secret_app/ui/bottom_sheets/alert/alert_sheet.dart';
 // @stacked-import
 
 @StackedApp(
@@ -32,7 +33,8 @@ import 'package:secret_app/ui/views/profile/profile_view.dart';
   ],
   bottomsheets: [
     StackedBottomsheet(classType: NoticeSheet),
-    // @stacked-bottom-sheet
+    StackedBottomsheet(classType: AlertSheet),
+// @stacked-bottom-sheet
   ],
   dialogs: [
     StackedDialog(classType: InfoAlertDialog),

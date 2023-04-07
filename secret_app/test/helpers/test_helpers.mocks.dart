@@ -688,13 +688,29 @@ class MockFirestoreService extends _i1.Mock implements _i7.FirestoreService {
 /// See the documentation for Mockito's code generation for more information.
 class MockUserService extends _i1.Mock implements _i9.UserService {
   @override
-  void setUser(_i8.AppUser? user) => super.noSuchMethod(
+  bool get hasLoggedInUser => (super.noSuchMethod(
+        Invocation.getter(#hasLoggedInUser),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+  @override
+  void logout() => super.noSuchMethod(
         Invocation.method(
-          #setUser,
-          [user],
+          #logout,
+          [],
         ),
         returnValueForMissingStub: null,
       );
+  @override
+  _i5.Future<String?> createUpdateUser(_i8.AppUser? user) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #createUpdateUser,
+          [user],
+        ),
+        returnValue: _i5.Future<String?>.value(),
+        returnValueForMissingStub: _i5.Future<String?>.value(),
+      ) as _i5.Future<String?>);
   @override
   _i5.Future<bool> fetchUser() => (super.noSuchMethod(
         Invocation.method(

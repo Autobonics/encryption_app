@@ -9,25 +9,37 @@ class UserService {
   final _authenticationService = locator<FirebaseAuthenticationService>();
   final _firestoreService = locator<FirestoreService>();
 
+  bool get hasLoggedInUser => _authenticationService.hasUser;
+
   AppUser? _user;
   AppUser? get user => _user;
 
-  void setUser(AppUser user) {
-    _firestoreService.createUser(
+  void logout() {
+    _user = null;
+    _authenticationService.logout();
+  }
+
+  Future<String?> createUpdateUser(AppUser user) async {
+    bool value = await _firestoreService.createUser(
       user: user,
       keyword: _createKeyWords(user.fullName),
     );
+    if (!value) {
+      return "Error uploading data";
+    } else {
+      return null;
+    }
   }
 
-  Future<bool> fetchUser() async {
+  Future<AppUser?> fetchUser() async {
     final uid = _authenticationService.currentUser?.uid;
     if (uid != null) {
-      final user = await _firestoreService.getUser(userId: uid);
+      AppUser? user = await _firestoreService.getUser(userId: uid);
       if (user != null) {
         _user = user;
       }
     }
-    return false;
+    return _user;
   }
 
   ///keywords list creating function
