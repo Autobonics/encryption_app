@@ -32,4 +32,20 @@ class ChatMessage {
       'fileLinks': fileLinks,
     };
   }
+
+  ChatMessage copyWith({
+    String? id,
+    String? senderId,
+    String? message,
+    List<String>? fileLinks,
+    DateTime? timestamp,
+  }) {
+    return ChatMessage(
+      id: id ?? this.id,
+      senderId: senderId ?? this.senderId,
+      message: message ?? this.message,
+      fileLinks: fileLinks ?? this.fileLinks,
+      timestamp: timestamp ?? this.timestamp,
+    );
+  }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:secret_app/app/app.locator.dart';
 import 'package:secret_app/app/app.logger.dart';
 import 'package:secret_app/models/appuser.dart';
@@ -14,6 +15,8 @@ class NoticeSheetModel extends BaseViewModel {
 
   List<AppUser> _users = [];
   List<AppUser> get users => _users;
+
+  final TextEditingController messageController = TextEditingController();
 
   Future<void> searchUsers(String keyword) async {
     if (keyword.isNotEmpty) {
@@ -39,6 +42,7 @@ class NoticeSheetModel extends BaseViewModel {
 
   void setUser(AppUser user) {
     _user = user;
+    messageController.clear();
     notifyListeners();
   }
 

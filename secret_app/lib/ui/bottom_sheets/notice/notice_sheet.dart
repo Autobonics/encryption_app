@@ -42,6 +42,7 @@ class NoticeSheet extends StackedView<NoticeSheetModel> {
                   TextField(
                     onChanged: (value) => viewModel.setChatName(value),
                     // autofocus: true,
+                    controller: viewModel.messageController,
                     keyboardType: TextInputType.name,
                     decoration: InputDecoration(
                       hintText: 'Enter chat name',
@@ -91,6 +92,7 @@ class NoticeSheet extends StackedView<NoticeSheetModel> {
                 children: [
                   TextField(
                     onChanged: (value) => viewModel.searchUsers(value),
+                    controller: viewModel.messageController,
                     autofocus: true,
                     decoration: InputDecoration(
                       hintText: 'Search by user name',

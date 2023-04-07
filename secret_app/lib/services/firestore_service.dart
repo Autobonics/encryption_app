@@ -118,8 +118,35 @@ class FirestoreService {
     }
   }
 
-  ///Chat Messages
-  Stream<List<ChatMessage>> listenToChatMessages(String chatId) {
+  ///Chat Message========================================================
+  Future<ChatMessage> addChatMessage(Chat chat, ChatMessage message) async {
+    log.i("Sending message");
+    try {
+      final messageDocRef = FirebaseFirestore.instance
+          .collection('chats')
+          .doc(chat.id)
+          .collection('messages')
+          .doc();
+
+      message = message.copyWith(id: messageDocRef.id);
+
+      await messageDocRef.set(message.toJson());
+      return message;
+    } catch (e) {
+      log.e('createChat Error: ${e.toString()}');
+      rethrow;
+    }
+  }
+
+  Future<void> deleteChatMessage(String chatId, String messageId) async {
+    await _chatsCollectionReference
+        .doc(chatId)
+        .collection('messages')
+        .doc(messageId)
+        .delete();
+  }
+
+  Stream<List<ChatMessage>> getChatMessagesStream(String chatId) {
     final query = _chatsCollectionReference
         .doc(chatId)
         .collection('messages')
