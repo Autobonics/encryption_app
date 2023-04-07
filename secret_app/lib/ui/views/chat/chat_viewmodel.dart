@@ -22,6 +22,16 @@ class ChatViewModel extends StreamViewModel<List<ChatMessage>>
   final FirestoreService _firestoreService = FirestoreService();
 
   AppUser? get user => _userService.user;
+  AppUser? _receiver;
+  AppUser? get receiver => _receiver;
+
+  List<int> securityLevels = <int>[0, 1, 2];
+  late int _securityLevel;
+  int get securityLevel => _securityLevel;
+  void setSecurityLevel(int? level) {
+    _securityLevel = level ?? 0;
+    notifyListeners();
+  }
 
   final TextEditingController messageController = TextEditingController();
 
@@ -30,9 +40,25 @@ class ChatViewModel extends StreamViewModel<List<ChatMessage>>
     required this.chat,
   });
 
-  // Future<void> init(Chat chat) async {
-  //   this.chat = chat;
-  // }
+  void onModelReady() async {
+    setBusy(true);
+    final String rUid =
+        chat.members.where((element) => element != user!.id).toList().first;
+    _receiver = await _firestoreService.getUser(userId: rUid);
+    if (_receiver != null) {
+      log.i("Receiver: ${receiver!.fullName}");
+    }
+    setBusy(false);
+  }
+
+  AppUser getUser(String id) {
+    if (id == user!.id) {
+      return user!;
+    } else {
+      return _receiver!;
+    }
+  }
+
   List<String> _fileLinks = <String>[];
   List<String> get fileLinks => _fileLinks;
   Future<void> sendMessage() async {
@@ -43,6 +69,7 @@ class ChatViewModel extends StreamViewModel<List<ChatMessage>>
       timestamp: DateTime.now(),
       fileLinks: fileLinks,
       id: '',
+      securityLevel: _securityLevel,
     );
     messageController.clear();
     await _firestoreService.addChatMessage(chat, newMessage);

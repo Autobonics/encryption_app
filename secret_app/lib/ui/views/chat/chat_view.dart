@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:secret_app/models/chat.dart';
+import 'package:secret_app/ui/common/app_colors.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'chat_viewmodel.dart';
@@ -22,6 +23,40 @@ class ChatView extends StackedView<ChatViewModel> {
     return Scaffold(
       appBar: AppBar(
         title: Text(chat.name),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: DropdownButton<int>(
+                  value: viewModel.securityLevel,
+                  iconEnabledColor: kcPrimaryColor,
+                  underline: Container(),
+                  onChanged: viewModel.setSecurityLevel,
+                  // style: TextStyle(color: Colors.white),
+                  items: viewModel.securityLevels
+                      .map<DropdownMenuItem<int>>((int value) {
+                    return DropdownMenuItem<int>(
+                      value: value,
+                      child: Text(
+                        "Security level $value",
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -39,7 +74,27 @@ class ChatView extends StackedView<ChatViewModel> {
                           final chatMessage = viewModel.data![index];
                           return ListTile(
                             title: Text(chatMessage.message),
-                            subtitle: Text(chatMessage.senderId),
+                            subtitle: Text(viewModel
+                                .getUser(chatMessage.senderId)
+                                .fullName),
+                            leading: CircleAvatar(
+                              backgroundImage: viewModel
+                                          .getUser(chatMessage.senderId)
+                                          .photoUrl !=
+                                      "nil"
+                                  ? NetworkImage(viewModel
+                                      .getUser(chatMessage.senderId)
+                                      .photoUrl)
+                                  : null,
+                              child: viewModel
+                                          .getUser(chatMessage.senderId)
+                                          .photoUrl ==
+                                      "nil"
+                                  ? Text(viewModel
+                                      .getUser(chatMessage.senderId)
+                                      .fullName[0])
+                                  : null,
+                            ),
                             trailing: IconButton(
                               icon: const Icon(Icons.delete),
                               onPressed: () {
@@ -108,7 +163,6 @@ class ChatView extends StackedView<ChatViewModel> {
   ) =>
       ChatViewModel(chat: chat);
 
-  // @override
-  // void onViewModelReady(ChatViewModel viewModel) =>
-  //     viewModel.onModelReady(chat);
+  @override
+  void onViewModelReady(ChatViewModel viewModel) => viewModel.onModelReady();
 }
