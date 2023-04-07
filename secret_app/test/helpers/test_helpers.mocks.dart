@@ -510,7 +510,8 @@ class MockDialogService extends _i1.Mock implements _i3.DialogService {
       _i4.BuildContext,
       _i3.DialogRequest<dynamic>,
       dynamic Function(_i3.DialogResponse<dynamic>),
-    )? builder,
+    )?
+        builder,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -642,7 +643,7 @@ class MockDialogService extends _i1.Mock implements _i3.DialogService {
 /// See the documentation for Mockito's code generation for more information.
 class MockFirestoreService extends _i1.Mock implements _i7.FirestoreService {
   @override
-  _i2.CollectionReference<Object?> get usersCollection => (super.noSuchMethod(
+  _i2.CollectionReference<Object?> get _usersCollection => (super.noSuchMethod(
         Invocation.getter(#usersCollection),
         returnValue: _FakeCollectionReference_0<Object?>(
           this,

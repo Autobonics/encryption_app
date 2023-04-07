@@ -1,6 +1,7 @@
 class AppUser {
   final String id;
   final String fullName;
+  final String photoUrl;
   final String email;
   final String userRole;
   final DateTime regTime;
@@ -8,14 +9,16 @@ class AppUser {
   AppUser({
     required this.id,
     required this.fullName,
+    required this.photoUrl,
     required this.email,
     required this.userRole,
     required this.regTime,
   });
 
-  AppUser.fromData(Map<String, dynamic> data)
+  AppUser.fromMap(Map<String, dynamic> data)
       : id = data['id'],
         fullName = data['fullName'],
+        photoUrl = data['photoUrl'],
         email = data['email'],
         userRole = data['userRole'] ?? "",
         regTime =
@@ -25,6 +28,7 @@ class AppUser {
     return {
       'id': id,
       'fullName': fullName,
+      'photoUrl': photoUrl,
       'keyword': keyword,
       'email': email,
       'userRole': userRole,

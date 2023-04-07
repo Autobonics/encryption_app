@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:stacked/stacked.dart';
 import 'package:secret_app/ui/common/app_colors.dart';
-import 'package:secret_app/ui/common/ui_helpers.dart';
+import 'package:stacked/stacked.dart';
 
 import 'home_viewmodel.dart';
 
@@ -27,24 +26,31 @@ class HomeView extends StackedView<HomeViewModel> {
             )
         ],
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-          child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // MaterialButton(
-                //     color: Colors.black,
-                //   onPressed: viewModel.incrementCounter,
-                //   child: Text(
-                //     viewModel.counterLabel,
-                //     style: const TextStyle(color: Colors.white),
-                //   ),
-                // ),
-              ],
-            ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: viewModel.showBottomSheetUserSearch,
+        label: Row(
+          children: const [
+            Text('New chat'),
+            Icon(Icons.add_circle),
+          ],
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // MaterialButton(
+              //   color: kcPrimaryColor,
+              //   onPressed: viewModel.showBottomSheetUserSearch,
+              //   child: const Text(
+              //     "New chat/file sharing!",
+              //     style: TextStyle(color: Colors.white),
+              //   ),
+              // ),
+            ],
           ),
         ),
       ),

@@ -24,6 +24,7 @@ class LoginViewModel extends FormViewModel {
         AppUser(
           id: result.user!.uid,
           fullName: result.user!.displayName ?? "Name",
+          photoUrl: result.user!.photoURL ?? "nil",
           regTime: DateTime.now(),
           email: result.user!.email!,
           userRole: "user",

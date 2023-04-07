@@ -14,7 +14,7 @@ class HomeViewModel extends BaseViewModel {
 
   final _navigationService = locator<NavigationService>();
   // final _dialogService = locator<DialogService>();
-  // final _bottomSheetService = locator<BottomSheetService>();
+  final _bottomSheetService = locator<BottomSheetService>();
   final _userService = locator<UserService>();
 
   AppUser? get user => _userService.user;
@@ -37,19 +37,14 @@ class HomeViewModel extends BaseViewModel {
     _navigationService.replaceWithLoginView();
   }
 
-  // void showDialog() {
-  //   _dialogService.showCustomDialog(
-  //     variant: DialogType.infoAlert,
-  //     title: 'Stacked Rocks!',
-  //     description: 'Give stacked $_counter stars on Github',
-  //   );
-  // }
-  //
-  // void showBottomSheet() {
-  //   _bottomSheetService.showCustomSheet(
-  //     variant: BottomSheetType.notice,
-  //     title: ksHomeBottomSheetTitle,
-  //     description: ksHomeBottomSheetDescription,
-  //   );
-  // }
+  void showBottomSheetUserSearch() async {
+    final result = await _bottomSheetService.showCustomSheet(
+      variant: BottomSheetType.notice,
+      title: ksHomeBottomSheetTitle,
+      description: ksHomeBottomSheetDescription,
+    );
+    if (result != null) {
+      if (result.confirmed) log.i(result.data.fullName);
+    }
+  }
 }
