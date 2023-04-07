@@ -1,6 +1,7 @@
 import 'package:secret_app/app/app.locator.dart';
 import 'package:secret_app/app/app.logger.dart';
 import 'package:secret_app/models/appuser.dart';
+import 'package:secret_app/models/chat.dart';
 import 'package:secret_app/services/firestore_service.dart';
 import 'package:secret_app/services/user_service.dart';
 import 'package:stacked/stacked.dart';
@@ -31,5 +32,29 @@ class NoticeSheetModel extends BaseViewModel {
 
       setBusy(false);
     }
+  }
+
+  AppUser? _user;
+  AppUser? get user => _user;
+
+  void setUser(AppUser user) {
+    _user = user;
+    notifyListeners();
+  }
+
+  String _chatName = '';
+  String get chatName => _chatName;
+
+  void setChatName(String value) {
+    _chatName = value;
+    notifyListeners();
+  }
+
+  Future<Chat> createChat() async {
+    final chatName = _chatName.isNotEmpty ? _chatName : user!.fullName;
+    final chat = Chat.create(chatName, [_userService.user!.id, user!.id]);
+    final chatCreated = await _firestoreService.createChat(chat);
+    // await _navigationService.back();
+    return chatCreated;
   }
 }

@@ -1,11 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:secret_app/app/app.locator.dart';
 import 'package:secret_app/app/app.logger.dart';
 import 'package:secret_app/constants/app_keys.dart';
 import 'package:secret_app/models/appuser.dart';
 import 'package:secret_app/models/chat.dart';
+import 'package:secret_app/services/user_service.dart';
 
 class FirestoreService {
   final log = getLogger('FirestoreApi');
+
+  String? _curentUserUid = "";
+  void setUserUid(String uid) {
+    _curentUserUid = uid;
+  }
 
   final CollectionReference _usersCollection =
       FirebaseFirestore.instance.collection(UsersFirestoreKey);
@@ -63,10 +70,14 @@ class FirestoreService {
   Future<Chat> createChat(Chat chat) async {
     try {
       final chatRef = _chatsCollectionReference.doc();
-      final chatUpdated =
-          Chat(id: chatRef.id, name: chat.name, members: chat.members);
+      final chatUpdated = Chat(
+        id: chatRef.id,
+        name: chat.name,
+        members: chat.members,
+        createdAt: chat.createdAt,
+      );
       // final DocumentReference documentReference =
-      await _chatsCollectionReference.add(chat.toJson());
+      await chatRef.set(chatUpdated.toJson());
       return chatUpdated;
     } catch (e) {
       log.e('createChat Error: ${e.toString()}');
@@ -92,10 +103,10 @@ class FirestoreService {
     }
   }
 
-  Stream<List<Chat>> getChats(String userId) {
+  Stream<List<Chat>> getChats() {
     try {
       return _chatsCollectionReference
-          .where('userIds', arrayContains: userId)
+          .where('userIds', arrayContains: _curentUserUid!)
           .snapshots()
           .map((QuerySnapshot querySnapshot) => querySnapshot.docs
               .map((DocumentSnapshot documentSnapshot) => Chat.fromJson(

@@ -35,57 +35,119 @@ class NoticeSheet extends StackedView<NoticeSheetModel> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Expanded(
-            child: Column(
-              children: [
-                TextField(
-                  onChanged: (value) => viewModel.searchUsers(value),
-                  autofocus: true,
-                  decoration: InputDecoration(
-                    hintText: 'Search user by name',
-                    prefixIcon: const Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
+          if (viewModel.user != null)
+            Expanded(
+              child: Column(
+                children: [
+                  TextField(
+                    onChanged: (value) => viewModel.setChatName(value),
+                    // autofocus: true,
+                    keyboardType: TextInputType.name,
+                    decoration: InputDecoration(
+                      hintText: 'Enter chat name',
+                      prefixIcon: const Icon(Icons.chat),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: viewModel.isBusy
-                      ? const Center(child: CircularProgressIndicator())
-                      : viewModel.hasError
-                          ? Center(child: Text(viewModel.error.toString()))
-                          : ListView.builder(
-                              itemCount: viewModel.users.length,
-                              itemBuilder: (context, index) {
-                                final AppUser user = viewModel.users[index];
-                                return Card(
-                                  child: ListTile(
-                                    title: Text(user.fullName),
-                                    subtitle: Text(user.email),
-                                    leading: CircleAvatar(
-                                      backgroundImage: user.photoUrl != "nil"
-                                          ? NetworkImage(user.photoUrl)
-                                          : null,
-                                      child: user.photoUrl == "nil"
-                                          ? Text(user.fullName[0])
-                                          : null,
+                  Expanded(
+                    child: viewModel.isBusy
+                        ? const Center(child: CircularProgressIndicator())
+                        : viewModel.hasError
+                            ? Center(child: Text(viewModel.error.toString()))
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      final chat = await viewModel.createChat();
+                                      return completer!(SheetResponse(
+                                        confirmed: true,
+                                        data: chat,
+                                      ));
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: const [
+                                          Text('Create Chat'),
+                                          SizedBox(width: 10),
+                                          Icon(Icons.add_box_rounded)
+                                        ],
+                                      ),
                                     ),
-                                    trailing: const Icon(
-                                      Icons.add_box_rounded,
-                                      color: kcPrimaryColor,
-                                    ),
-                                    onTap: () => completer!(SheetResponse(
-                                      confirmed: true,
-                                      data: user,
-                                    )),
                                   ),
-                                );
-                              },
-                            ),
-                ),
-              ],
+                                ],
+                              ),
+                  ),
+                ],
+              ),
+            )
+          else
+            Expanded(
+              child: Column(
+                children: [
+                  TextField(
+                    onChanged: (value) => viewModel.searchUsers(value),
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      hintText: 'Search by user name',
+                      prefixIcon: const Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: viewModel.isBusy
+                        ? const Center(child: CircularProgressIndicator())
+                        : viewModel.hasError
+                            ? Center(child: Text(viewModel.error.toString()))
+                            : ListView.builder(
+                                itemCount: viewModel.users.length,
+                                itemBuilder: (context, index) {
+                                  final AppUser user = viewModel.users[index];
+                                  return Card(
+                                    child: ListTile(
+                                      title: Text(user.fullName),
+                                      subtitle: Text(user.email),
+                                      leading: CircleAvatar(
+                                        backgroundImage: user.photoUrl != "nil"
+                                            ? NetworkImage(user.photoUrl)
+                                            : null,
+                                        child: user.photoUrl == "nil"
+                                            ? Text(user.fullName[0])
+                                            : null,
+                                      ),
+                                      trailing: const Icon(
+                                        Icons.add_box_rounded,
+                                        color: kcPrimaryColor,
+                                      ),
+                                      onTap: () async {
+                                        viewModel.setUser(user);
+                                        // show bottom sheet to enter chat name
+                                        // String chatName = await
+
+                                        // if (chatName != null) {
+                                        //   await viewModel.createChat(user, chatName);
+
+                                        // completer!(SheetResponse(
+                                        //   confirmed: true,
+                                        //   data: user,
+                                        // ));
+                                        // }
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
+                  ),
+                ],
+              ),
             ),
-          ),
+
           // Text(
           //   request.title!,
           //   style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w900),
