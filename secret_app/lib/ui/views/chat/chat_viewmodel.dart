@@ -26,7 +26,7 @@ class ChatViewModel extends StreamViewModel<List<ChatMessage>>
   AppUser? get receiver => _receiver;
 
   List<int> securityLevels = <int>[0, 1, 2];
-  late int _securityLevel;
+  int _securityLevel = 0;
   int get securityLevel => _securityLevel;
   void setSecurityLevel(int? level) {
     _securityLevel = level ?? 0;

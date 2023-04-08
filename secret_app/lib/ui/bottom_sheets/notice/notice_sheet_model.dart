@@ -3,6 +3,7 @@ import 'package:secret_app/app/app.locator.dart';
 import 'package:secret_app/app/app.logger.dart';
 import 'package:secret_app/models/appuser.dart';
 import 'package:secret_app/models/chat.dart';
+import 'package:secret_app/services/encrypt_service.dart';
 import 'package:secret_app/services/firestore_service.dart';
 import 'package:secret_app/services/user_service.dart';
 import 'package:stacked/stacked.dart';
@@ -12,6 +13,7 @@ class NoticeSheetModel extends BaseViewModel {
 
   final FirestoreService _firestoreService = locator<FirestoreService>();
   final _userService = locator<UserService>();
+  final _encryptService = locator<EncryptService>();
 
   List<AppUser> _users = [];
   List<AppUser> get users => _users;
@@ -56,7 +58,9 @@ class NoticeSheetModel extends BaseViewModel {
 
   Future<Chat> createChat() async {
     final chatName = _chatName.isNotEmpty ? _chatName : user!.fullName;
-    final chat = Chat.create(chatName, [_userService.user!.id, user!.id]);
+    String encryptionKey = _encryptService.generateKey();
+    final chat =
+        Chat.create(chatName, [_userService.user!.id, user!.id], encryptionKey);
     final chatCreated = await _firestoreService.createChat(chat);
     // await _navigationService.back();
     return chatCreated;

@@ -12,6 +12,7 @@ import 'package:secret_app/services/user_service.dart';
 import 'package:secret_app/ui/views/profile/profile_view.dart';
 import 'package:secret_app/ui/bottom_sheets/alert/alert_sheet.dart';
 import 'package:secret_app/ui/views/chat/chat_view.dart';
+import 'package:secret_app/services/encrypt_service.dart';
 // @stacked-import
 
 @StackedApp(
@@ -31,6 +32,7 @@ import 'package:secret_app/ui/views/chat/chat_view.dart';
     LazySingleton(classType: FirebaseAuthenticationService),
     LazySingleton(classType: FirestoreService),
     LazySingleton(classType: UserService),
+    LazySingleton(classType: EncryptService),
 // @stacked-service
   ],
   bottomsheets: [

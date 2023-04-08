@@ -70,6 +70,7 @@ class FirestoreService {
       final chatUpdated = Chat(
         id: chatRef.id,
         name: chat.name,
+        encryptionKey: chat.encryptionKey,
         members: chat.members,
         createdAt: chat.createdAt,
       );

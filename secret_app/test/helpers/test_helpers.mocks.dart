@@ -11,6 +11,7 @@ import 'package:mockito/mockito.dart' as _i1;
 import 'package:secret_app/models/appuser.dart' as _i9;
 import 'package:secret_app/models/chat.dart' as _i2;
 import 'package:secret_app/models/chat_message.dart' as _i3;
+import 'package:secret_app/services/encrypt_service.dart' as _i11;
 import 'package:secret_app/services/firestore_service.dart' as _i8;
 import 'package:secret_app/services/user_service.dart' as _i10;
 import 'package:stacked_services/stacked_services.dart' as _i4;
@@ -774,6 +775,22 @@ class MockFirestoreService extends _i1.Mock implements _i8.FirestoreService {
         )),
       ) as _i6.Future<_i3.ChatMessage>);
   @override
+  _i6.Future<void> deleteChatMessage(
+    String? chatId,
+    String? messageId,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #deleteChatMessage,
+          [
+            chatId,
+            messageId,
+          ],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+  @override
   _i6.Stream<List<_i3.ChatMessage>> getChatMessagesStream(String? chatId) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -823,3 +840,8 @@ class MockUserService extends _i1.Mock implements _i10.UserService {
         returnValueForMissingStub: _i6.Future<_i9.AppUser?>.value(),
       ) as _i6.Future<_i9.AppUser?>);
 }
+
+/// A class which mocks [EncryptService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockEncryptService extends _i1.Mock implements _i11.EncryptService {}

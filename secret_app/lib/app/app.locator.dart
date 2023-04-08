@@ -12,6 +12,7 @@ import 'package:stacked_services/src/dialog/dialog_service.dart';
 import 'package:stacked_services/src/navigation/navigation_service.dart';
 import 'package:stacked_shared/stacked_shared.dart';
 
+import '../services/encrypt_service.dart';
 import '../services/firestore_service.dart';
 import '../services/user_service.dart';
 
@@ -32,4 +33,5 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => FirebaseAuthenticationService());
   locator.registerLazySingleton(() => FirestoreService());
   locator.registerLazySingleton(() => UserService());
+  locator.registerLazySingleton(() => EncryptService());
 }
