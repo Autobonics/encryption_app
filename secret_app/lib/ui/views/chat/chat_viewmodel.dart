@@ -82,10 +82,6 @@ class ChatViewModel extends StreamViewModel<List<ChatMessage>>
     await _firestoreService.deleteChatMessage(chat.id, message.id);
   }
 
-  String textDecrypt(String text) {
-    return _encryptService.decryptText(text, chat.encryptionKey);
-  }
-
   @override
   Stream<List<ChatMessage>> get stream =>
       _firestoreService.getChatMessagesStream(chat.id);

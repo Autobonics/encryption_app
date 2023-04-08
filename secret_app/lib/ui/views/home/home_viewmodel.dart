@@ -34,6 +34,9 @@ class HomeViewModel extends StreamViewModel<List<Chat>> {
         log.i("No user document");
       }
     }
+    // if (user!.imgString != null) {
+    //   _regulaService.setUserImage(user!.imgString!);
+    // }
     setBusy(false);
   }
 
@@ -44,16 +47,23 @@ class HomeViewModel extends StreamViewModel<List<Chat>> {
 
   void createUpdateFaceData() async {
     setBusy(true);
-    String? img = await _regulaService.imageBitmap();
+    String? img = await _regulaService.setFaceAndGetImagePath();
     if (img != null) {
       log.i(img);
-      // await _userService.createUpdateUser(user!.copyWith(imgString: img));
-      // await _userService.fetchUser();
+      await _userService.createUpdateUser(user!.copyWith(imgString: img));
+      await _userService.fetchUser();
+      // _regulaService.setUserImage(img);
       log.i("Showing bottom sheet");
       _bottomSheetService.showCustomSheet(
         variant: BottomSheetType.success,
         title: "Face data updated",
         description: img ?? "Face unlock is added for extra security.",
+      );
+    } else {
+      _bottomSheetService.showCustomSheet(
+        variant: BottomSheetType.success,
+        title: "Canceled",
+        description: "",
       );
     }
     setBusy(false);

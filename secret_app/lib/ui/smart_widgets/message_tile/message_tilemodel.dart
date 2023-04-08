@@ -1,80 +1,64 @@
 import 'package:secret_app/app/app.bottomsheets.dart';
-// import 'package:secret_app/app/app.dialogs.dart';
 import 'package:secret_app/app/app.locator.dart';
 import 'package:secret_app/app/app.logger.dart';
-import 'package:secret_app/app/app.router.dart';
 import 'package:secret_app/models/appuser.dart';
 import 'package:secret_app/models/chat.dart';
-import 'package:secret_app/services/firestore_service.dart';
+import 'package:secret_app/models/chat_message.dart';
+import 'package:secret_app/services/encrypt_service.dart';
 import 'package:secret_app/services/regula_service.dart';
-import 'package:secret_app/services/user_service.dart';
-import 'package:secret_app/ui/common/app_strings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class HomeViewModel extends StreamViewModel<List<Chat>> {
-  final log = getLogger('HomeViewModel');
+class MessageTileModel extends BaseViewModel {
+  final log = getLogger('MessageTileModel');
 
-  final _navigationService = locator<NavigationService>();
-  // final _dialogService = locator<DialogService>();
   final _bottomSheetService = locator<BottomSheetService>();
-  final _userService = locator<UserService>();
-  final FirestoreService _firestoreService = FirestoreService();
   final RegulaService _regulaService = RegulaService();
+  final _encryptService = locator<EncryptService>();
 
-  AppUser? get user => _userService.user;
-
-  void onModelReady() async {
-    setBusy(true);
-    if (user == null) {
-      AppUser? user = await _userService.fetchUser();
-      if (user != null) {
-        log.i(user.fullName);
-      } else {
-        log.i("No user document");
-      }
-    }
-    setBusy(false);
+  late Chat _chat;
+  late AppUser _user;
+  late ChatMessage _chatMessage;
+  void onModelReady(Chat chat, ChatMessage chatMessage, AppUser user) async {
+    _chat = chat;
+    _user = user;
+    _chatMessage = chatMessage;
+    if (_chatMessage.securityLevel == 0) _isUnlocked = true;
+    notifyListeners();
   }
 
-  void logout() {
-    _userService.logout();
-    _navigationService.replaceWithLoginView();
-  }
-
-  void createUpdateFaceData() async {
+  bool _isUnlocked = false;
+  bool get isUnlocked => _isUnlocked;
+  void unLock() async {
     setBusy(true);
-    String? img = await _regulaService.setFaceAndGetImagePath();
-    if (img != null) {
-      log.i(img);
-      await _userService.createUpdateUser(user!.copyWith(imgString: img));
-      await _userService.fetchUser();
-      log.i("Showing bottom sheet");
+    double? matchedFace = await _regulaService.checkMatch(_user.imgString!,
+        isLiveness: _chatMessage.securityLevel == 2);
+    if (matchedFace == null) {
+      _bottomSheetService.showCustomSheet(
+        variant: BottomSheetType.alert,
+        title: "Canceled",
+        description: "",
+      );
+    } else if (matchedFace > 90) {
+      log.i("Unlocked: $matchedFace%");
+      _isUnlocked = true;
+      setBusy(false);
       _bottomSheetService.showCustomSheet(
         variant: BottomSheetType.success,
-        title: "Face data updated",
-        description: img ?? "Face unlock is added for extra security.",
+        title: "Face unlocked",
+        description: "You can now view the file.",
+      );
+    } else {
+      _bottomSheetService.showCustomSheet(
+        variant: BottomSheetType.alert,
+        title: "No verified",
+        description: "User not verified or try again.",
       );
     }
     setBusy(false);
   }
 
-  void showBottomSheetUserSearch() async {
-    final result = await _bottomSheetService.showCustomSheet(
-      variant: BottomSheetType.notice,
-      title: ksHomeBottomSheetTitle,
-      description: ksHomeBottomSheetDescription,
-    );
-    if (result != null) {
-      if (result.confirmed) log.i("Chat created: ${result.data.name}");
-    }
-  }
-
-  ///===========================
-  @override
-  Stream<List<Chat>> get stream => _firestoreService.getChats();
-
-  Future<void> navigateToChat(Chat chat) async {
-    _navigationService.navigateToChatView(chat: chat);
+  String textDecrypt(String text) {
+    return _encryptService.decryptText(text, _chat.encryptionKey);
   }
 }

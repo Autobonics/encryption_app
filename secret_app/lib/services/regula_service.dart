@@ -1,13 +1,18 @@
 import 'dart:convert';
-import 'dart:io' as io;
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_face_api/face_api.dart' as Regula;
 import 'package:image_picker/image_picker.dart';
+import 'package:secret_app/app/app.bottomsheets.dart';
+import 'package:secret_app/app/app.locator.dart';
 import 'package:secret_app/app/app.logger.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class RegulaService {
-  final log = getLogger('EncryptService');
+  final log = getLogger('RegulaService');
+  final _bottomSheetService = locator<BottomSheetService>();
 
   // late Regula.FaceSDK _faceSDK;
 
@@ -32,20 +37,107 @@ class RegulaService {
     // });
   }
 
-  Future<String?> imageBitmap() async {
+  Future<Uint8List?> imageBitmap() async {
     final result = await Regula.FaceSDK.presentFaceCaptureActivity();
     if (result != null) {
-      log.i("result");
+      log.i("Result got");
       Regula.FaceCaptureResponse? response =
           Regula.FaceCaptureResponse.fromJson(json.decode(result));
       if (response != null && response.image != null) {
-        log.i("image");
+        log.i("Image response");
         Uint8List imageFile =
             base64Decode(response.image!.bitmap!.replaceAll("\n", ""));
-
-        return base64Encode(imageFile);
+        return imageFile;
       }
     }
     return null;
+  }
+
+  Future<String?> setFaceAndGetImagePath() async {
+    Uint8List? imageFile = await imageBitmap();
+    if (imageFile != null) {
+      log.i("Getting path..");
+      // getting a directory path for saving
+      final directory = await getApplicationDocumentsDirectory();
+      File file = File(('${directory.path}/faceData.png'));
+      file.writeAsBytesSync(imageFile); // This is a sync operation on a real
+      // return base64Encode(imageFile);
+      return file.path;
+    }
+    return null;
+  }
+
+  Regula.MatchFacesImage getMatchFacesImage(Uint8List imageFile, int type) {
+    var image = Regula.MatchFacesImage();
+    image.bitmap = base64Encode(imageFile);
+    image.imageType = type;
+    return image;
+  }
+
+  void setUserImage(String path) {
+    final file = File(path).readAsBytesSync();
+    final image = getMatchFacesImage(file, Regula.ImageType.LIVE);
+    _image1.bitmap = image.bitmap;
+    _image1.imageType = image.imageType;
+    log.i("User image set:  $path type: ${_image1.imageType}");
+  }
+
+  final _image1 = Regula.MatchFacesImage();
+  final _image2 = Regula.MatchFacesImage();
+
+  Future<double?> checkMatch(String path, {bool isLiveness = false}) async {
+    setUserImage(path);
+    Uint8List? imageFile =
+        isLiveness ? await checkLiveness() : await imageBitmap();
+    if (imageFile == null) return null;
+    log.i("second image captured");
+    _image2.bitmap = base64Encode(imageFile);
+    _image2.imageType = Regula.ImageType.LIVE;
+    if (_image1.bitmap != null && _image1.bitmap != "") {
+      log.i("Image 1 ready");
+    }
+    if (_image2.bitmap != null && _image2.bitmap != "") {
+      log.i("Image 2 ready");
+    }
+    if (_image1.bitmap == null ||
+        _image1.bitmap == "" ||
+        _image2.bitmap == null ||
+        _image2.bitmap == "") return null;
+
+    log.i("Checking face");
+    var request = Regula.MatchFacesRequest();
+    request.images = [_image1, _image2];
+    String value = await Regula.FaceSDK.matchFaces(jsonEncode(request));
+    Regula.MatchFacesResponse? response =
+        Regula.MatchFacesResponse.fromJson(json.decode(value));
+    String str = await Regula.FaceSDK.matchFacesSimilarityThresholdSplit(
+        jsonEncode(response!.results), 0.75);
+
+    Regula.MatchFacesSimilarityThresholdSplit? split =
+        Regula.MatchFacesSimilarityThresholdSplit.fromJson(json.decode(str));
+    if (split!.matchedFaces.isNotEmpty) {
+      log.i(
+          "Matched face index: ${split.matchedFaces[0]!.first!.face!.faceIndex}");
+      return (split.matchedFaces[0]!.similarity! * 100);
+    }
+
+    return null;
+  }
+
+  Future<Uint8List?> checkLiveness() async {
+    var value = await Regula.FaceSDK.startLiveness();
+    var result = Regula.LivenessResponse.fromJson(json.decode(value));
+    Uint8List image = base64Decode(result!.bitmap!.replaceAll("\n", ""));
+    if (result.liveness == Regula.LivenessStatus.PASSED) {
+      log.i("Live image");
+      // _bottomSheetService.showCustomSheet(
+      //   variant: BottomSheetType.success,
+      //   title: "Face unlocked",
+      //   description: "You can now view the file.",
+      // );
+      return image;
+    } else {
+      return null;
+    }
   }
 }
