@@ -5,11 +5,6 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'chat_viewmodel.dart';
 
-@FormView(fields: [
-  FormTextField(
-    name: 'message',
-  ),
-])
 class ChatView extends StackedView<ChatViewModel> {
   final Chat chat;
   const ChatView({Key? key, required this.chat}) : super(key: key);
@@ -73,7 +68,8 @@ class ChatView extends StackedView<ChatViewModel> {
                         itemBuilder: (context, index) {
                           final chatMessage = viewModel.data![index];
                           return ListTile(
-                            title: Text(chatMessage.message),
+                            title: Text(
+                                viewModel.textDecrypt(chatMessage.message)),
                             subtitle: Text(viewModel
                                 .getUser(chatMessage.senderId)
                                 .fullName),

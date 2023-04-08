@@ -6,6 +6,7 @@ import 'package:secret_app/app/app.logger.dart';
 import 'package:secret_app/models/appuser.dart';
 import 'package:secret_app/models/chat.dart';
 import 'package:secret_app/models/chat_message.dart';
+import 'package:secret_app/services/encrypt_service.dart';
 import 'package:secret_app/services/firestore_service.dart';
 import 'package:secret_app/services/user_service.dart';
 import 'package:stacked/stacked.dart';
@@ -20,6 +21,7 @@ class ChatViewModel extends StreamViewModel<List<ChatMessage>>
   // final _bottomSheetService = locator<BottomSheetService>();
   final _userService = locator<UserService>();
   final FirestoreService _firestoreService = FirestoreService();
+  final _encryptService = locator<EncryptService>();
 
   AppUser? get user => _userService.user;
   AppUser? _receiver;
@@ -64,7 +66,8 @@ class ChatViewModel extends StreamViewModel<List<ChatMessage>>
   Future<void> sendMessage() async {
     log.i("message");
     final newMessage = ChatMessage(
-      message: messageController.text,
+      message: _encryptService.encryptText(
+          messageController.text, chat.encryptionKey),
       senderId: user!.id,
       timestamp: DateTime.now(),
       fileLinks: fileLinks,
@@ -77,6 +80,10 @@ class ChatViewModel extends StreamViewModel<List<ChatMessage>>
 
   Future<void> deleteMessage(ChatMessage message) async {
     await _firestoreService.deleteChatMessage(chat.id, message.id);
+  }
+
+  String textDecrypt(String text) {
+    return _encryptService.decryptText(text, chat.encryptionKey);
   }
 
   @override
