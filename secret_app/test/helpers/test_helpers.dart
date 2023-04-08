@@ -5,6 +5,7 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:secret_app/services/firestore_service.dart';
 import 'package:secret_app/services/user_service.dart';
 import 'package:secret_app/services/encrypt_service.dart';
+import 'package:secret_app/services/regula_service.dart';
 // @stacked-import
 
 import 'test_helpers.mocks.dart';
@@ -16,6 +17,7 @@ import 'test_helpers.mocks.dart';
   MockSpec<FirestoreService>(onMissingStub: OnMissingStub.returnDefault),
   MockSpec<UserService>(onMissingStub: OnMissingStub.returnDefault),
   MockSpec<EncryptService>(onMissingStub: OnMissingStub.returnDefault),
+  MockSpec<RegulaService>(onMissingStub: OnMissingStub.returnDefault),
 // @stacked-mock-spec
 ])
 void registerServices() {
@@ -25,6 +27,7 @@ void registerServices() {
   getAndRegisterFirestoreService();
   getAndRegisterUserService();
   getAndRegisterEncryptService();
+  getAndRegisterRegulaService();
 // @stacked-mock-register
 }
 
@@ -96,6 +99,13 @@ MockEncryptService getAndRegisterEncryptService() {
   _removeRegistrationIfExists<EncryptService>();
   final service = MockEncryptService();
   locator.registerSingleton<EncryptService>(service);
+  return service;
+}
+
+MockRegulaService getAndRegisterRegulaService() {
+  _removeRegistrationIfExists<RegulaService>();
+  final service = MockRegulaService();
+  locator.registerSingleton<RegulaService>(service);
   return service;
 }
 // @stacked-mock-create

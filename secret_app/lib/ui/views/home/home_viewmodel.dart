@@ -6,6 +6,7 @@ import 'package:secret_app/app/app.router.dart';
 import 'package:secret_app/models/appuser.dart';
 import 'package:secret_app/models/chat.dart';
 import 'package:secret_app/services/firestore_service.dart';
+import 'package:secret_app/services/regula_service.dart';
 import 'package:secret_app/services/user_service.dart';
 import 'package:secret_app/ui/common/app_strings.dart';
 import 'package:stacked/stacked.dart';
@@ -19,6 +20,7 @@ class HomeViewModel extends StreamViewModel<List<Chat>> {
   final _bottomSheetService = locator<BottomSheetService>();
   final _userService = locator<UserService>();
   final FirestoreService _firestoreService = FirestoreService();
+  final RegulaService _regulaService = RegulaService();
 
   AppUser? get user => _userService.user;
 
@@ -38,6 +40,23 @@ class HomeViewModel extends StreamViewModel<List<Chat>> {
   void logout() {
     _userService.logout();
     _navigationService.replaceWithLoginView();
+  }
+
+  void createUpdateFaceData() async {
+    setBusy(true);
+    String? img = await _regulaService.imageBitmap();
+    if (img != null) {
+      log.i(img);
+      // await _userService.createUpdateUser(user!.copyWith(imgString: img));
+      // await _userService.fetchUser();
+      log.i("Showing bottom sheet");
+      _bottomSheetService.showCustomSheet(
+        variant: BottomSheetType.success,
+        title: "Face data updated",
+        description: img ?? "Face unlock is added for extra security.",
+      );
+    }
+    setBusy(false);
   }
 
   void showBottomSheetUserSearch() async {

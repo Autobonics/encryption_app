@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:secret_app/models/appuser.dart';
 import 'package:secret_app/models/chat.dart';
+import 'package:secret_app/models/chat_message.dart';
 import 'package:secret_app/ui/common/app_colors.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -67,36 +69,15 @@ class ChatView extends StackedView<ChatViewModel> {
                         reverse: true,
                         itemBuilder: (context, index) {
                           final chatMessage = viewModel.data![index];
-                          return ListTile(
-                            title: Text(
-                                viewModel.textDecrypt(chatMessage.message)),
-                            subtitle: Text(viewModel
-                                .getUser(chatMessage.senderId)
-                                .fullName),
-                            leading: CircleAvatar(
-                              backgroundImage: viewModel
-                                          .getUser(chatMessage.senderId)
-                                          .photoUrl !=
-                                      "nil"
-                                  ? NetworkImage(viewModel
-                                      .getUser(chatMessage.senderId)
-                                      .photoUrl)
-                                  : null,
-                              child: viewModel
-                                          .getUser(chatMessage.senderId)
-                                          .photoUrl ==
-                                      "nil"
-                                  ? Text(viewModel
-                                      .getUser(chatMessage.senderId)
-                                      .fullName[0])
-                                  : null,
-                            ),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () {
-                                viewModel.deleteMessage(chatMessage);
-                              },
-                            ),
+                          return MessageTile(
+                            user: viewModel.user!,
+                            message: viewModel.textDecrypt(chatMessage.message),
+                            messageSender:
+                                viewModel.getUser(chatMessage.senderId),
+                            chatMessage: chatMessage,
+                            onDelete: () {
+                              viewModel.deleteMessage(chatMessage);
+                            },
                           );
                         },
                       ),
@@ -131,26 +112,6 @@ class ChatView extends StackedView<ChatViewModel> {
         ],
       ),
     );
-
-    // return Scaffold(
-    //   backgroundColor: Theme.of(context).backgroundColor,
-    //   body: Center(
-    //     child: viewModel.isBusy
-    //         ? const Center(child: CircularProgressIndicator())
-    //         : viewModel.data?.isEmpty ?? true
-    //             ? const Center(child: Text('No chats yet'))
-    //             : ListView.builder(
-    //                 itemCount: viewModel.data?.length,
-    //                 itemBuilder: (context, index) {
-    //                   final chat = viewModel.data![index];
-    //                   // return ChatListTile(
-    //                   //   chat: chat,
-    //                   //   onTap: (Chat) {},
-    //                   // );
-    //                 },
-    //               ),
-    //   ),
-    // );
   }
 
   @override
@@ -161,4 +122,53 @@ class ChatView extends StackedView<ChatViewModel> {
 
   @override
   void onViewModelReady(ChatViewModel viewModel) => viewModel.onModelReady();
+}
+
+class MessageTile extends StatelessWidget {
+  final String message;
+  final AppUser user;
+  final AppUser messageSender;
+  final ChatMessage chatMessage;
+  final VoidCallback onDelete;
+  const MessageTile({
+    Key? key,
+    required this.message,
+    required this.user,
+    required this.messageSender,
+    required this.chatMessage,
+    required this.onDelete,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title:
+          chatMessage.securityLevel == 0 ? Text(message) : const Text('Locked'),
+      subtitle: Text(messageSender.fullName),
+      leading: CircleAvatar(
+        backgroundImage: messageSender.photoUrl != "nil"
+            ? NetworkImage(messageSender.photoUrl)
+            : null,
+        child: messageSender.photoUrl == "nil"
+            ? Text(messageSender.fullName[0])
+            : null,
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          if (chatMessage.securityLevel > 0)
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.lock),
+            ),
+          if (chatMessage.senderId == user.id)
+            IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: onDelete,
+            ),
+        ],
+      ),
+    );
+  }
 }

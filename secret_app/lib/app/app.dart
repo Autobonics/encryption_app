@@ -13,6 +13,9 @@ import 'package:secret_app/ui/views/profile/profile_view.dart';
 import 'package:secret_app/ui/bottom_sheets/alert/alert_sheet.dart';
 import 'package:secret_app/ui/views/chat/chat_view.dart';
 import 'package:secret_app/services/encrypt_service.dart';
+import 'package:secret_app/services/regula_service.dart';
+import 'package:secret_app/ui/bottom_sheets/success/success_sheet.dart';
+import 'package:secret_app/ui/bottom_sheets/success/success_sheet.dart';
 // @stacked-import
 
 @StackedApp(
@@ -33,11 +36,14 @@ import 'package:secret_app/services/encrypt_service.dart';
     LazySingleton(classType: FirestoreService),
     LazySingleton(classType: UserService),
     LazySingleton(classType: EncryptService),
+    LazySingleton(classType: RegulaService),
 // @stacked-service
   ],
   bottomsheets: [
     StackedBottomsheet(classType: NoticeSheet),
     StackedBottomsheet(classType: AlertSheet),
+    StackedBottomsheet(classType: SuccessSheet),
+    StackedBottomsheet(classType: SuccessSheet),
 // @stacked-bottom-sheet
   ],
   dialogs: [

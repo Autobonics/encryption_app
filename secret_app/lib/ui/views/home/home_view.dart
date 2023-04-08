@@ -20,6 +20,11 @@ class HomeView extends StackedView<HomeViewModel> {
           'Secure App',
         ),
         actions: [
+          if (viewModel.user != null && viewModel.user!.imgString != null)
+            IconButton(
+              onPressed: viewModel.createUpdateFaceData,
+              icon: const Icon(Icons.face),
+            ),
           if (viewModel.user != null)
             CircleAvatar(
               radius: 18,
@@ -50,18 +55,43 @@ class HomeView extends StackedView<HomeViewModel> {
       body: Center(
         child: viewModel.isBusy
             ? const Center(child: CircularProgressIndicator())
-            : viewModel.data?.isEmpty ?? true
-                ? const Center(child: Text('No chats yet'))
-                : ListView.builder(
-                    itemCount: viewModel.data?.length,
-                    itemBuilder: (context, index) {
-                      final chat = viewModel.data![index];
-                      return ChatListTile(
-                        chat: chat,
-                        onTap: viewModel.navigateToChat,
-                      );
-                    },
-                  ),
+            : viewModel.user != null && viewModel.user!.imgString == null
+                ? MaterialButton(
+                    onPressed: viewModel.createUpdateFaceData,
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: const [
+                            Icon(
+                              Icons.face_unlock_rounded,
+                              size: 30,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                'Setup face unlock!',
+                                style: TextStyle(fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                : viewModel.data?.isEmpty ?? true
+                    ? const Center(child: Text('No chats yet'))
+                    : ListView.builder(
+                        itemCount: viewModel.data?.length,
+                        itemBuilder: (context, index) {
+                          final chat = viewModel.data![index];
+                          return ChatListTile(
+                            chat: chat,
+                            onTap: viewModel.navigateToChat,
+                          );
+                        },
+                      ),
       ),
     );
   }

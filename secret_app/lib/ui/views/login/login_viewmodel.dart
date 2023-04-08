@@ -20,27 +20,32 @@ class LoginViewModel extends FormViewModel {
     final result = await _authenticationService.signInWithGoogle();
     log.i(result.errorMessage);
     if (result.user != null) {
-      String? error = await _userService.createUpdateUser(
-        AppUser(
-          id: result.user!.uid,
-          fullName: result.user!.displayName ?? "Name",
-          photoUrl: result.user!.photoURL ?? "nil",
-          regTime: DateTime.now(),
-          email: result.user!.email!,
-          userRole: "user",
-        ),
-      );
-      if (error == null) {
-        setBusy(false);
-        _userService.fetchUser();
-        _navigationService.replaceWithHomeView();
-      } else {
-        log.i("Firebase error");
-        _bottomSheetService.showCustomSheet(
-          variant: BottomSheetType.alert,
-          title: "Upload Error",
-          description: error,
+      AppUser? _user = await _userService.fetchUser();
+      if (_user == null) {
+        String? error = await _userService.createUpdateUser(
+          AppUser(
+            id: result.user!.uid,
+            fullName: result.user!.displayName ?? "Name",
+            photoUrl: result.user!.photoURL ?? "nil",
+            regTime: DateTime.now(),
+            email: result.user!.email!,
+            userRole: "user",
+          ),
         );
+        if (error == null) {
+          setBusy(false);
+          _navigationService.replaceWithHomeView();
+        } else {
+          log.i("Firebase error");
+          _bottomSheetService.showCustomSheet(
+            variant: BottomSheetType.alert,
+            title: "Upload Error",
+            description: error,
+          );
+        }
+      } else {
+        setBusy(false);
+        _navigationService.replaceWithHomeView();
       }
     } else {
       log.i("Error: ${result.errorMessage}");
