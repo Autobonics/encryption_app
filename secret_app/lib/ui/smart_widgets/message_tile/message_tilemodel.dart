@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:secret_app/app/app.bottomsheets.dart';
 import 'package:secret_app/app/app.locator.dart';
 import 'package:secret_app/app/app.logger.dart';
@@ -26,7 +28,10 @@ class MessageTileModel extends BaseViewModel {
     _chat = chat;
     _user = user;
     _chatMessage = chatMessage;
-    if (_chatMessage.securityLevel == 0) _isUnlocked = true;
+    if (_chatMessage.securityLevel == 0) {
+      _isUnlocked = true;
+      if (_chatMessage.fileLink != '') fileDownloadAndDecrypt();
+    }
     notifyListeners();
   }
 
@@ -45,6 +50,7 @@ class MessageTileModel extends BaseViewModel {
     } else if (matchedFace > 90) {
       log.i("Unlocked: $matchedFace%");
       _isUnlocked = true;
+      if (_chatMessage.fileLink != '') fileDownloadAndDecrypt();
       setBusy(false);
       _bottomSheetService.showCustomSheet(
         variant: BottomSheetType.success,
@@ -73,5 +79,19 @@ class MessageTileModel extends BaseViewModel {
 
   String textDecrypt(String text) {
     return _encryptService.decryptText(text, _chat.encryptionKey);
+  }
+
+  File? _file;
+  File? get file => _file;
+  void fileDownloadAndDecrypt() async {
+    log.i("Started");
+    File? downloaded = await _storageService.downloadFile(_chatMessage.fileLink,
+        'chats/${_chat.id}/${_chatMessage.id}', _chatMessage.fileFormat);
+    if (downloaded != null) {
+      _file =
+          await _encryptService.decryptFile(downloaded, _chat.encryptionKey);
+      // downloaded.delete();
+      notifyListeners();
+    }
   }
 }

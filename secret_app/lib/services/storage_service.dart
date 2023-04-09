@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:secret_app/app/app.locator.dart';
 import 'package:secret_app/app/app.logger.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:http/http.dart' as http;
 
 class StorageService with ListenableServiceMixin {
   final log = getLogger('StorageService');
@@ -51,9 +53,22 @@ class StorageService with ListenableServiceMixin {
     }
   }
 
-  // @override
-  // void dispose() {
-  //   _uploadTaskController.close();
-  //   super.dispose();
-  // }
+  // Function to download a file from Firebase Storage
+  Future<File?> downloadFile(String url, String path, String format) async {
+    final http.Response downloadData = await http.get(Uri.parse(url));
+    final Directory systemTempDir = await getTemporaryDirectory();
+    final File downloadToFile =
+        File('${systemTempDir.path}/${path.split('/').last}.$format');
+    await downloadToFile.writeAsBytes(downloadData.bodyBytes);
+    // Directory appDocDir = await getApplicationDocumentsDirectory();
+    // File downloadToFile = File('${appDocDir.path}/$path.$format');
+    // try {
+    //   await _storage.ref(path).writeToFile(downloadToFile);
+    return downloadToFile;
+    // } catch (e) {
+    //   // e.g, e.code == 'canceled'
+    //   log.e('Download error: $e');
+    // }
+    return null;
+  }
 }

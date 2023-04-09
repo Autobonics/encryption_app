@@ -70,7 +70,6 @@ class MessageSenderModel extends ReactiveViewModel {
           await _encryptService.encryptFile(_fileSelected!, chat.encryptionKey);
       fileUrl = await _storageService.uploadFile(
           encryptedFile, "chats/${chat.id}/$messageId");
-      _fileSelected = null;
       notifyListeners();
     }
     final newMessage = ChatMessage(
@@ -88,6 +87,7 @@ class MessageSenderModel extends ReactiveViewModel {
       securityLevel: _securityLevel,
     );
     messageController.clear();
+    if (_fileSelected != null) _fileSelected = null;
     await _firestoreService.addChatMessage(chat, newMessage, id: newMessage.id);
   }
 

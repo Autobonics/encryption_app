@@ -766,10 +766,20 @@ class MockFirestoreService extends _i1.Mock implements _i10.FirestoreService {
         returnValueForMissingStub: _i8.Stream<List<_i2.Chat>>.empty(),
       ) as _i8.Stream<List<_i2.Chat>>);
   @override
+  _i8.Future<String> getChatMessageId(_i2.Chat? chat) => (super.noSuchMethod(
+        Invocation.method(
+          #getChatMessageId,
+          [chat],
+        ),
+        returnValue: _i8.Future<String>.value(''),
+        returnValueForMissingStub: _i8.Future<String>.value(''),
+      ) as _i8.Future<String>);
+  @override
   _i8.Future<_i3.ChatMessage> addChatMessage(
     _i2.Chat? chat,
-    _i3.ChatMessage? message,
-  ) =>
+    _i3.ChatMessage? message, {
+    String? id,
+  }) =>
       (super.noSuchMethod(
         Invocation.method(
           #addChatMessage,
@@ -777,6 +787,7 @@ class MockFirestoreService extends _i1.Mock implements _i10.FirestoreService {
             chat,
             message,
           ],
+          {#id: id},
         ),
         returnValue: _i8.Future<_i3.ChatMessage>.value(_FakeChatMessage_1(
           this,
@@ -786,6 +797,7 @@ class MockFirestoreService extends _i1.Mock implements _i10.FirestoreService {
               chat,
               message,
             ],
+            {#id: id},
           ),
         )),
         returnValueForMissingStub:
@@ -797,6 +809,7 @@ class MockFirestoreService extends _i1.Mock implements _i10.FirestoreService {
               chat,
               message,
             ],
+            {#id: id},
           ),
         )),
       ) as _i8.Future<_i3.ChatMessage>);
@@ -1083,4 +1096,93 @@ class MockRegulaService extends _i1.Mock implements _i14.RegulaService {
 /// A class which mocks [StorageService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockStorageService extends _i1.Mock implements _i16.StorageService {}
+class MockStorageService extends _i1.Mock implements _i16.StorageService {
+  @override
+  double get progress => (super.noSuchMethod(
+        Invocation.getter(#progress),
+        returnValue: 0.0,
+        returnValueForMissingStub: 0.0,
+      ) as double);
+  @override
+  int get listenersCount => (super.noSuchMethod(
+        Invocation.getter(#listenersCount),
+        returnValue: 0,
+        returnValueForMissingStub: 0,
+      ) as int);
+  @override
+  _i8.Future<String> uploadFile(
+    _i4.File? file,
+    String? path,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #uploadFile,
+          [
+            file,
+            path,
+          ],
+        ),
+        returnValue: _i8.Future<String>.value(''),
+        returnValueForMissingStub: _i8.Future<String>.value(''),
+      ) as _i8.Future<String>);
+  @override
+  _i8.Future<dynamic> deleteFile(String? path) => (super.noSuchMethod(
+        Invocation.method(
+          #deleteFile,
+          [path],
+        ),
+        returnValue: _i8.Future<dynamic>.value(),
+        returnValueForMissingStub: _i8.Future<dynamic>.value(),
+      ) as _i8.Future<dynamic>);
+  @override
+  _i8.Future<_i4.File?> downloadFile(
+    String? url,
+    String? path,
+    String? format,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #downloadFile,
+          [
+            url,
+            path,
+            format,
+          ],
+        ),
+        returnValue: _i8.Future<_i4.File?>.value(),
+        returnValueForMissingStub: _i8.Future<_i4.File?>.value(),
+      ) as _i8.Future<_i4.File?>);
+  @override
+  void listenToReactiveValues(List<dynamic>? reactiveValues) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #listenToReactiveValues,
+          [reactiveValues],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void addListener(void Function()? listener) => super.noSuchMethod(
+        Invocation.method(
+          #addListener,
+          [listener],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void removeListener(void Function()? listener) => super.noSuchMethod(
+        Invocation.method(
+          #removeListener,
+          [listener],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void notifyListeners() => super.noSuchMethod(
+        Invocation.method(
+          #notifyListeners,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+}

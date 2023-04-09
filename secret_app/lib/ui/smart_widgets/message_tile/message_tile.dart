@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:open_file_plus/open_file_plus.dart';
 import 'package:secret_app/models/appuser.dart';
 import 'package:secret_app/models/chat.dart';
 import 'package:secret_app/models/chat_message.dart';
@@ -26,57 +27,115 @@ class MessageTile extends StackedView<MessageTileModel> {
     MessageTileModel viewModel,
     Widget? child,
   ) {
-    return ListTile(
-      title: viewModel.isUnlocked
-          ? chatMessage.message != ""
-              ? Text(viewModel.textDecrypt(chatMessage.message))
-              : null
-          : const Text('----'),
-      subtitle: Text(messageSender.fullName),
-      leading: CircleAvatar(
-        backgroundImage: messageSender.photoUrl != "nil"
-            ? NetworkImage(messageSender.photoUrl)
-            : null,
-        child: messageSender.photoUrl == "nil"
-            ? Text(messageSender.fullName[0])
-            : null,
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+        side: const BorderSide(
+          color: Colors.black,
+          width: 1.0,
+        ),
       ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
+      child: Column(
         children: [
-          if (!viewModel.isBusy && chatMessage.senderId == user.id)
-            IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: viewModel.deleteMessage,
-            ),
-          if (viewModel.isBusy)
+          if (viewModel.isUnlocked &&
+              viewModel.file == null &&
+              chatMessage.fileLink != '')
             const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: SizedBox(
-                  height: 20.0,
-                  width: 20.0,
-                  child: CircularProgressIndicator(strokeWidth: 2)),
-            )
-          else if (!viewModel.isUnlocked)
-            IconButton(
-              onPressed: viewModel.unLock,
-              icon: Icon(
-                Icons.lock,
-                color:
-                    chatMessage.securityLevel == 1 ? Colors.green : Colors.red,
+              padding: EdgeInsets.only(top: 18.0),
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
               ),
             )
-          else
+          else if (viewModel.file != null &&
+              (chatMessage.fileFormat == "jpg" ||
+                  chatMessage.fileFormat == "png"))
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Icon(Icons.check_circle_outline,
-                  color: chatMessage.securityLevel == 0
-                      ? null
-                      : chatMessage.securityLevel == 1
-                          ? Colors.green
-                          : Colors.red),
+              child: Image.file(viewModel.file!),
+            )
+          else if (viewModel.file != null &&
+              (chatMessage.fileFormat != "jpg" &&
+                  chatMessage.fileFormat != "png"))
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: MaterialButton(
+                      onPressed: () {
+                        OpenFile.open(viewModel.file!.path);
+                      },
+                      child: Card(
+                          color: kcPrimaryColor,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Open ${chatMessage.fileFormat} file",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          )),
+                    ),
+                  ),
+                ),
+              ],
             ),
+          ListTile(
+            title: viewModel.isUnlocked
+                ? chatMessage.message != ""
+                    ? Text(viewModel.textDecrypt(chatMessage.message))
+                    : null
+                : const Text('----'),
+            subtitle: Text(messageSender.fullName),
+            leading: CircleAvatar(
+              backgroundImage: messageSender.photoUrl != "nil"
+                  ? NetworkImage(messageSender.photoUrl)
+                  : null,
+              child: messageSender.photoUrl == "nil"
+                  ? Text(messageSender.fullName[0])
+                  : null,
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                if (!viewModel.isBusy && chatMessage.senderId == user.id)
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: viewModel.deleteMessage,
+                  ),
+                if (viewModel.isBusy)
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: SizedBox(
+                        height: 20.0,
+                        width: 20.0,
+                        child: CircularProgressIndicator(strokeWidth: 2)),
+                  )
+                else if (!viewModel.isUnlocked)
+                  IconButton(
+                    onPressed: viewModel.unLock,
+                    icon: Icon(
+                      Icons.lock,
+                      color: chatMessage.securityLevel == 1
+                          ? Colors.green
+                          : Colors.red,
+                    ),
+                  )
+                else
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Icon(Icons.check_circle_outline,
+                        color: chatMessage.securityLevel == 0
+                            ? null
+                            : chatMessage.securityLevel == 1
+                                ? Colors.green
+                                : Colors.red),
+                  ),
+              ],
+            ),
+          ),
         ],
       ),
     );

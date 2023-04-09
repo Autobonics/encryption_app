@@ -25,7 +25,7 @@ class LoginViewModel extends FormViewModel {
         String? error = await _userService.createUpdateUser(
           AppUser(
             id: result.user!.uid,
-            fullName: result.user!.displayName ?? "Name",
+            fullName: result.user!.displayName ?? "nil",
             photoUrl: result.user!.photoURL ?? "nil",
             regTime: DateTime.now(),
             email: result.user!.email!,
@@ -49,6 +49,7 @@ class LoginViewModel extends FormViewModel {
       }
     } else {
       log.i("Error: ${result.errorMessage}");
+      setBusy(false);
       _bottomSheetService.showCustomSheet(
         variant: BottomSheetType.alert,
         title: "Error",
