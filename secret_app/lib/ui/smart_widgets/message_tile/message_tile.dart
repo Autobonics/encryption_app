@@ -71,7 +71,7 @@ class MessageTile extends StackedView<MessageTileModel> {
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               "Open ${chatMessage.fileFormat} file",
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                               ),
                             ),

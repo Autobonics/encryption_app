@@ -58,9 +58,12 @@ class MessageSender extends StackedView<MessageSenderModel> {
                   width: 25,
                   child: CircularProgressIndicator(value: viewModel.progress))
             else if (viewModel.fileSelected != null)
-              const Icon(
-                Icons.file_download_done,
-                color: Colors.green,
+              IconButton(
+                icon: const Icon(
+                  Icons.file_download_done,
+                  color: Colors.green,
+                ),
+                onPressed: viewModel.filePicker,
               )
             else
               IconButton(

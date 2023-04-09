@@ -16,24 +16,31 @@ class HomeView extends StackedView<HomeViewModel> {
   ) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Secure App',
+        title: Row(
+          children: [
+            if (viewModel.user != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: CircleAvatar(
+                  radius: 18,
+                  backgroundImage: viewModel.user!.photoUrl != "nil"
+                      ? NetworkImage(viewModel.user!.photoUrl)
+                      : null,
+                  child: viewModel.user!.photoUrl == "nil"
+                      ? Text(viewModel.user!.fullName[0])
+                      : null,
+                ),
+              ),
+            Text(
+              'Secure App',
+            ),
+          ],
         ),
         actions: [
           if (viewModel.user != null && viewModel.user!.imgString != null)
             IconButton(
               onPressed: viewModel.createUpdateFaceData,
               icon: const Icon(Icons.face),
-            ),
-          if (viewModel.user != null)
-            CircleAvatar(
-              radius: 18,
-              backgroundImage: viewModel.user!.photoUrl != "nil"
-                  ? NetworkImage(viewModel.user!.photoUrl)
-                  : null,
-              child: viewModel.user!.photoUrl == "nil"
-                  ? Text(viewModel.user!.fullName[0])
-                  : null,
             ),
           if (viewModel.user != null)
             IconButton(
@@ -89,6 +96,8 @@ class HomeView extends StackedView<HomeViewModel> {
                           return ChatListTile(
                             chat: chat,
                             onTap: viewModel.navigateToChat,
+                            onDelete: viewModel.deleteChat,
+                            isDeleting: viewModel.isChatDeleting,
                           );
                         },
                       ),
@@ -109,11 +118,15 @@ class HomeView extends StackedView<HomeViewModel> {
 class ChatListTile extends StatelessWidget {
   final Chat chat;
   final Function(Chat) onTap;
+  final Function(Chat) onDelete;
+  final bool isDeleting;
 
   const ChatListTile({
     Key? key,
     required this.chat,
     required this.onTap,
+    required this.onDelete,
+    required this.isDeleting,
   }) : super(key: key);
 
   @override
@@ -125,10 +138,23 @@ class ChatListTile extends StatelessWidget {
         leading: CircleAvatar(
             // backgroundImage:
             child: Text(chat.name[0])),
-        // trailing: const Icon(
-        //   Icons.add_box_rounded,
-        //   color: kcPrimaryColor,
-        // ),
+        trailing: isDeleting
+            ? const SizedBox(
+                height: 25,
+                width: 25,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                ),
+              )
+            : IconButton(
+                onPressed: () {
+                  onDelete(chat);
+                },
+                icon: const Icon(
+                  Icons.delete,
+                  color: kcPrimaryColor,
+                ),
+              ),
         onTap: () => onTap(chat),
       ),
     );

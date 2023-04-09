@@ -71,4 +71,13 @@ class StorageService with ListenableServiceMixin {
     // }
     return null;
   }
+
+  Future deleteChatFiles(String id) async {
+    log.i("Deleting chats files");
+    await _storage.ref("chats/$id").listAll().then((value) {
+      for (var element in value.items) {
+        _storage.ref(element.fullPath).delete();
+      }
+    });
+  }
 }

@@ -39,6 +39,7 @@ dependencies:
   file_picker: ^5.2.7
   http: ^0.13.5
   open_file_plus: ^3.4.0
+  local_auth: ^2.1.6
 
   # UI
   cupertino_icons: ^1.0.2

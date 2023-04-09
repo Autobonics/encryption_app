@@ -7,6 +7,7 @@ import 'package:secret_app/models/appuser.dart';
 import 'package:secret_app/models/chat.dart';
 import 'package:secret_app/services/firestore_service.dart';
 import 'package:secret_app/services/regula_service.dart';
+import 'package:secret_app/services/storage_service.dart';
 import 'package:secret_app/services/user_service.dart';
 import 'package:secret_app/ui/common/app_strings.dart';
 import 'package:stacked/stacked.dart';
@@ -21,6 +22,7 @@ class HomeViewModel extends StreamViewModel<List<Chat>> {
   final _userService = locator<UserService>();
   final FirestoreService _firestoreService = FirestoreService();
   final RegulaService _regulaService = RegulaService();
+  final StorageService _storageService = StorageService();
 
   AppUser? get user => _userService.user;
 
@@ -80,11 +82,22 @@ class HomeViewModel extends StreamViewModel<List<Chat>> {
     }
   }
 
+  bool _isChatDeleting = false;
+  bool get isChatDeleting => _isChatDeleting;
+  void deleteChat(Chat chat) async {
+    _isChatDeleting = true;
+    notifyListeners();
+    await _storageService.deleteChatFiles(chat.id);
+    await _firestoreService.deleteChat(chat);
+    _isChatDeleting = false;
+    notifyListeners();
+  }
+
   ///===========================
   @override
   Stream<List<Chat>> get stream => _firestoreService.getChats();
 
   Future<void> navigateToChat(Chat chat) async {
-    _navigationService.navigateToChatView(chat: chat);
+    if (!_isChatDeleting) _navigationService.navigateToChatView(chat: chat);
   }
 }

@@ -94,6 +94,17 @@ class FirestoreService {
 
   Future<void> deleteChat(Chat chat) async {
     try {
+      final instance = FirebaseFirestore.instance;
+      final batch = instance.batch();
+      var collection =
+          instance.collection('chats').doc(chat.id).collection('messages');
+      var snapshots = await collection.get();
+      for (var doc in snapshots.docs) {
+        batch.delete(doc.reference);
+      }
+      log.i("Deleting message docs");
+      await batch.commit();
+      log.i("Deleting chats doc");
       await _chatsCollectionReference.doc(chat.id).delete();
     } catch (e) {
       log.e('deleteChat Error: ${e.toString()}');
