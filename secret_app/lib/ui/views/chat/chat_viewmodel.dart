@@ -10,6 +10,7 @@ import 'package:secret_app/models/chat.dart';
 import 'package:secret_app/models/chat_message.dart';
 import 'package:secret_app/services/encrypt_service.dart';
 import 'package:secret_app/services/firestore_service.dart';
+import 'package:secret_app/services/storage_service.dart';
 import 'package:secret_app/services/user_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -23,19 +24,10 @@ class ChatViewModel extends StreamViewModel<List<ChatMessage>>
   // final _bottomSheetService = locator<BottomSheetService>();
   final _userService = locator<UserService>();
   final FirestoreService _firestoreService = FirestoreService();
-  final _encryptService = locator<EncryptService>();
 
   AppUser? get user => _userService.user;
   AppUser? _receiver;
   AppUser? get receiver => _receiver;
-
-  List<int> securityLevels = <int>[0, 1, 2];
-  int _securityLevel = 0;
-  int get securityLevel => _securityLevel;
-  void setSecurityLevel(int? level) {
-    _securityLevel = level ?? 0;
-    notifyListeners();
-  }
 
   final TextEditingController messageController = TextEditingController();
 
@@ -61,41 +53,6 @@ class ChatViewModel extends StreamViewModel<List<ChatMessage>>
     } else {
       return _receiver!;
     }
-  }
-
-  List<String> _fileLinks = <String>[];
-  List<String> get fileLinks => _fileLinks;
-
-  Future<void> sendMessage() async {
-    log.i("message");
-    // if()
-    final newMessage = ChatMessage(
-      message: _encryptService.encryptText(
-          messageController.text, chat.encryptionKey),
-      senderId: user!.id,
-      timestamp: DateTime.now(),
-      fileLinks: fileLinks,
-      id: '',
-      securityLevel: _securityLevel,
-    );
-    messageController.clear();
-    await _firestoreService.addChatMessage(chat, newMessage);
-  }
-
-  File? _fileSelected;
-  File? get fileSelected => _fileSelected;
-  Future filePicker() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-
-    if (result != null) {
-      _fileSelected = File(result.files.single.path!);
-    } else {
-      log.i("File picker error");
-    }
-  }
-
-  Future<void> deleteMessage(ChatMessage message) async {
-    await _firestoreService.deleteChatMessage(chat.id, message.id);
   }
 
   @override

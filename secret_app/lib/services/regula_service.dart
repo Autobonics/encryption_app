@@ -17,13 +17,15 @@ class RegulaService {
 
   Future<void> initPlatformState() async {
     log.i("Regula started");
-    Regula.FaceSDK.init().then((json) {
-      var response = jsonDecode(json);
-      if (!response["success"]) {
-        log.i("Init failed: ");
-        log.i(json);
-      }
-    });
+    Regula.FaceSDK.init().then(
+      (json) {
+        var response = jsonDecode(json);
+        if (!response["success"]) {
+          log.i("Init failed: ");
+          log.i(json);
+        }
+      },
+    );
 
     // const EventChannel('flutter_face_api/event/video_encoder_completion')
     //     .receiveBroadcastStream()

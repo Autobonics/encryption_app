@@ -120,7 +120,7 @@ class FirestoreService {
   }
 
   ///Chat Message========================================================
-  Future<ChatMessage> addChatMessage(Chat chat, ChatMessage message) async {
+  Future<String> getChatMessageId(Chat chat) async {
     log.i("Sending message");
     try {
       final messageDocRef = FirebaseFirestore.instance
@@ -128,8 +128,24 @@ class FirestoreService {
           .doc(chat.id)
           .collection('messages')
           .doc();
+      return messageDocRef.id;
+    } catch (e) {
+      log.e('createChat Error: ${e.toString()}');
+      rethrow;
+    }
+  }
 
-      message = message.copyWith(id: messageDocRef.id);
+  Future<ChatMessage> addChatMessage(Chat chat, ChatMessage message,
+      {String? id}) async {
+    log.i("Sending message");
+    try {
+      final messageDocRef = FirebaseFirestore.instance
+          .collection('chats')
+          .doc(chat.id)
+          .collection('messages')
+          .doc(id);
+
+      if (id != null) message = message.copyWith(id: messageDocRef.id);
 
       await messageDocRef.set(message.toJson());
       return message;

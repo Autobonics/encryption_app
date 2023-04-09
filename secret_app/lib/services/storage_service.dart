@@ -36,12 +36,13 @@ class StorageService with ListenableServiceMixin {
 
     final snapshot = await uploadTask.whenComplete(() {});
     final url = await snapshot.ref.getDownloadURL();
-
+    _progress = 0;
+    notifyListeners();
     return url;
   }
 
-  Future deleteFile() async {
-    final Reference storageRef = _storage.ref().child('path/to/file');
+  Future deleteFile(String path) async {
+    final Reference storageRef = _storage.ref().child(path);
     try {
       await storageRef.delete();
       log.i('File deleted successfully.');

@@ -4,7 +4,8 @@ class ChatMessage {
   final String message;
   final int securityLevel;
   final DateTime timestamp;
-  final List<String> fileLinks;
+  final String fileLink;
+  final String fileFormat;
 
   ChatMessage({
     required this.id,
@@ -12,7 +13,8 @@ class ChatMessage {
     required this.message,
     required this.securityLevel,
     required this.timestamp,
-    required this.fileLinks,
+    required this.fileLink,
+    required this.fileFormat,
   });
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) {
@@ -22,7 +24,8 @@ class ChatMessage {
       message: json['message'],
       securityLevel: json['securityLevel'] ?? 0,
       timestamp: json['timestamp'].toDate(),
-      fileLinks: List<String>.from(json['fileLinks'] ?? []),
+      fileLink: json['fileLink'] ?? "",
+      fileFormat: json['fileFormat'] ?? "",
     );
   }
 
@@ -33,7 +36,8 @@ class ChatMessage {
       'message': message,
       'timestamp': timestamp,
       'securityLevel': securityLevel,
-      'fileLinks': fileLinks,
+      'fileLink': fileLink,
+      'fileFormat': fileFormat,
     };
   }
 
@@ -42,7 +46,8 @@ class ChatMessage {
     String? senderId,
     String? message,
     int? securityLevel,
-    List<String>? fileLinks,
+    String? fileLink,
+    String? fileFormat,
     DateTime? timestamp,
   }) {
     return ChatMessage(
@@ -50,7 +55,8 @@ class ChatMessage {
       senderId: senderId ?? this.senderId,
       message: message ?? this.message,
       securityLevel: securityLevel ?? this.securityLevel,
-      fileLinks: fileLinks ?? this.fileLinks,
+      fileLink: fileLink ?? this.fileLink,
+      fileFormat: fileFormat ?? this.fileFormat,
       timestamp: timestamp ?? this.timestamp,
     );
   }

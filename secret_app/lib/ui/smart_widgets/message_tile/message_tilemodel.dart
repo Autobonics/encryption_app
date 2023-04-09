@@ -5,7 +5,9 @@ import 'package:secret_app/models/appuser.dart';
 import 'package:secret_app/models/chat.dart';
 import 'package:secret_app/models/chat_message.dart';
 import 'package:secret_app/services/encrypt_service.dart';
+import 'package:secret_app/services/firestore_service.dart';
 import 'package:secret_app/services/regula_service.dart';
+import 'package:secret_app/services/storage_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -15,7 +17,8 @@ class MessageTileModel extends BaseViewModel {
   final _bottomSheetService = locator<BottomSheetService>();
   final RegulaService _regulaService = RegulaService();
   final _encryptService = locator<EncryptService>();
-
+  final FirestoreService _firestoreService = FirestoreService();
+  final StorageService _storageService = StorageService();
   late Chat _chat;
   late AppUser _user;
   late ChatMessage _chatMessage;
@@ -55,6 +58,16 @@ class MessageTileModel extends BaseViewModel {
         description: "User not verified or try again.",
       );
     }
+    setBusy(false);
+  }
+
+  Future<void> deleteMessage() async {
+    log.i("Delete message");
+    setBusy(true);
+    if (_chatMessage.fileLink != '') {
+      await _storageService.deleteFile("chats/${_chat.id}/${_chatMessage.id}");
+    }
+    await _firestoreService.deleteChatMessage(_chat.id, _chatMessage.id);
     setBusy(false);
   }
 

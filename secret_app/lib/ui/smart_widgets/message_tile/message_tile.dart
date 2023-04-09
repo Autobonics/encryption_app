@@ -12,14 +12,12 @@ class MessageTile extends StackedView<MessageTileModel> {
   final AppUser user;
   final AppUser messageSender;
   final ChatMessage chatMessage;
-  final VoidCallback onDelete;
   const MessageTile({
     Key? key,
     required this.chat,
     required this.user,
     required this.messageSender,
     required this.chatMessage,
-    required this.onDelete,
   }) : super(key: key);
 
   @override
@@ -30,7 +28,9 @@ class MessageTile extends StackedView<MessageTileModel> {
   ) {
     return ListTile(
       title: viewModel.isUnlocked
-          ? Text(viewModel.textDecrypt(chatMessage.message))
+          ? chatMessage.message != ""
+              ? Text(viewModel.textDecrypt(chatMessage.message))
+              : null
           : const Text('----'),
       subtitle: Text(messageSender.fullName),
       leading: CircleAvatar(
@@ -45,6 +45,11 @@ class MessageTile extends StackedView<MessageTileModel> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          if (!viewModel.isBusy && chatMessage.senderId == user.id)
+            IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: viewModel.deleteMessage,
+            ),
           if (viewModel.isBusy)
             const Padding(
               padding: EdgeInsets.all(8.0),
@@ -71,11 +76,6 @@ class MessageTile extends StackedView<MessageTileModel> {
                       : chatMessage.securityLevel == 1
                           ? Colors.green
                           : Colors.red),
-            ),
-          if (chatMessage.senderId == user.id)
-            IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: onDelete,
             ),
         ],
       ),

@@ -6,7 +6,8 @@ class EncryptService {
   final log = getLogger('EncryptService');
 
   String generateKey() {
-    final key = Key.fromSecureRandom(32);
+    // final key = Key.fromSecureRandom(32);
+    final key = Key.fromLength(16);
     final encodedKey = key.base64;
     log.i('Generated key: $encodedKey');
     return encodedKey;
