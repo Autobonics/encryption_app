@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:secret_app/app/app.locator.dart';
 import 'package:secret_app/app/app.logger.dart';
@@ -63,8 +65,10 @@ class ChatViewModel extends StreamViewModel<List<ChatMessage>>
 
   List<String> _fileLinks = <String>[];
   List<String> get fileLinks => _fileLinks;
+
   Future<void> sendMessage() async {
     log.i("message");
+    // if()
     final newMessage = ChatMessage(
       message: _encryptService.encryptText(
           messageController.text, chat.encryptionKey),
@@ -76,6 +80,18 @@ class ChatViewModel extends StreamViewModel<List<ChatMessage>>
     );
     messageController.clear();
     await _firestoreService.addChatMessage(chat, newMessage);
+  }
+
+  File? _fileSelected;
+  File? get fileSelected => _fileSelected;
+  Future filePicker() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      _fileSelected = File(result.files.single.path!);
+    } else {
+      log.i("File picker error");
+    }
   }
 
   Future<void> deleteMessage(ChatMessage message) async {

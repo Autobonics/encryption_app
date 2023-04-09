@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_face_api/face_api.dart' as Regula;
-import 'package:image_picker/image_picker.dart';
 import 'package:secret_app/app/app.bottomsheets.dart';
 import 'package:secret_app/app/app.locator.dart';
 import 'package:secret_app/app/app.logger.dart';
@@ -17,6 +16,7 @@ class RegulaService {
   // late Regula.FaceSDK _faceSDK;
 
   Future<void> initPlatformState() async {
+    log.i("Regula started");
     Regula.FaceSDK.init().then((json) {
       var response = jsonDecode(json);
       if (!response["success"]) {
@@ -43,6 +43,7 @@ class RegulaService {
       log.i("Result got");
       Regula.FaceCaptureResponse? response =
           Regula.FaceCaptureResponse.fromJson(json.decode(result));
+      log.i(response?.exception?.message ?? "Error");
       if (response != null && response.image != null) {
         log.i("Image response");
         Uint8List imageFile =

@@ -6,6 +6,7 @@ import 'package:secret_app/services/firestore_service.dart';
 import 'package:secret_app/services/user_service.dart';
 import 'package:secret_app/services/encrypt_service.dart';
 import 'package:secret_app/services/regula_service.dart';
+import 'package:secret_app/services/storage_service.dart';
 // @stacked-import
 
 import 'test_helpers.mocks.dart';
@@ -18,6 +19,7 @@ import 'test_helpers.mocks.dart';
   MockSpec<UserService>(onMissingStub: OnMissingStub.returnDefault),
   MockSpec<EncryptService>(onMissingStub: OnMissingStub.returnDefault),
   MockSpec<RegulaService>(onMissingStub: OnMissingStub.returnDefault),
+  MockSpec<StorageService>(onMissingStub: OnMissingStub.returnDefault),
 // @stacked-mock-spec
 ])
 void registerServices() {
@@ -28,6 +30,7 @@ void registerServices() {
   getAndRegisterUserService();
   getAndRegisterEncryptService();
   getAndRegisterRegulaService();
+  getAndRegisterStorageService();
 // @stacked-mock-register
 }
 
@@ -106,6 +109,13 @@ MockRegulaService getAndRegisterRegulaService() {
   _removeRegistrationIfExists<RegulaService>();
   final service = MockRegulaService();
   locator.registerSingleton<RegulaService>(service);
+  return service;
+}
+
+MockStorageService getAndRegisterStorageService() {
+  _removeRegistrationIfExists<StorageService>();
+  final service = MockStorageService();
+  locator.registerSingleton<StorageService>(service);
   return service;
 }
 // @stacked-mock-create

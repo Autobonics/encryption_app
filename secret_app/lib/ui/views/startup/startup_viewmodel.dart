@@ -16,11 +16,11 @@ class StartupViewModel extends BaseViewModel {
   Future runStartupLogic() async {
     if (_userService.hasLoggedInUser) {
       await _userService.fetchUser();
-      _regulaService.initPlatformState();
       _navigationService.replaceWithHomeView();
     } else {
       await Future.delayed(const Duration(seconds: 1));
       _navigationService.replaceWithLoginView();
     }
+    _regulaService.initPlatformState();
   }
 }

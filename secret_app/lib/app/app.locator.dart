@@ -15,6 +15,7 @@ import 'package:stacked_shared/stacked_shared.dart';
 import '../services/encrypt_service.dart';
 import '../services/firestore_service.dart';
 import '../services/regula_service.dart';
+import '../services/storage_service.dart';
 import '../services/user_service.dart';
 
 final locator = StackedLocator.instance;
@@ -36,4 +37,5 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => UserService());
   locator.registerLazySingleton(() => EncryptService());
   locator.registerLazySingleton(() => RegulaService());
+  locator.registerLazySingleton(() => StorageService());
 }

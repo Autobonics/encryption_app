@@ -61,7 +61,7 @@ class HomeViewModel extends StreamViewModel<List<Chat>> {
       );
     } else {
       _bottomSheetService.showCustomSheet(
-        variant: BottomSheetType.success,
+        variant: BottomSheetType.alert,
         title: "Canceled",
         description: "",
       );

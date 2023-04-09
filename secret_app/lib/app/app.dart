@@ -16,6 +16,7 @@ import 'package:secret_app/services/encrypt_service.dart';
 import 'package:secret_app/services/regula_service.dart';
 import 'package:secret_app/ui/bottom_sheets/success/success_sheet.dart';
 import 'package:secret_app/ui/bottom_sheets/success/success_sheet.dart';
+import 'package:secret_app/services/storage_service.dart';
 // @stacked-import
 
 @StackedApp(
@@ -37,6 +38,7 @@ import 'package:secret_app/ui/bottom_sheets/success/success_sheet.dart';
     LazySingleton(classType: UserService),
     LazySingleton(classType: EncryptService),
     LazySingleton(classType: RegulaService),
+    LazySingleton(classType: StorageService),
 // @stacked-service
   ],
   bottomsheets: [

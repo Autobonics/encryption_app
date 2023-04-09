@@ -104,6 +104,10 @@ class ChatView extends StackedView<ChatViewModel> {
                     ),
                   ),
                   IconButton(
+                    icon: const Icon(Icons.file_present),
+                    onPressed: viewModel.filePicker,
+                  ),
+                  IconButton(
                     icon: const Icon(Icons.send),
                     onPressed: viewModel.sendMessage,
                   ),
