@@ -62,6 +62,7 @@ class MessageSenderModel extends ReactiveViewModel {
   double get progress => _storageService.progress;
 
   Future<void> sendMessage() async {
+    setBusy(true);
     log.i("message");
     String messageId = await _firestoreService.getChatMessageId(chat);
     String? fileUrl;
@@ -89,6 +90,7 @@ class MessageSenderModel extends ReactiveViewModel {
     messageController.clear();
     if (_fileSelected != null) _fileSelected = null;
     await _firestoreService.addChatMessage(chat, newMessage, id: newMessage.id);
+    setBusy(false);
   }
 
   File? _fileSelected;

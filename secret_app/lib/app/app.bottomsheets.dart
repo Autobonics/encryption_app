@@ -27,8 +27,6 @@ void setupBottomSheetUi() {
         AlertSheet(request: request, completer: completer),
     BottomSheetType.success: (context, request, completer) =>
         SuccessSheet(request: request, completer: completer),
-    BottomSheetType.success: (context, request, completer) =>
-        SuccessSheet(request: request, completer: completer),
   };
 
   bottomsheetService.setCustomSheetBuilders(builders);

@@ -115,6 +115,7 @@ class RegulaService {
         Regula.MatchFacesResponse.fromJson(json.decode(value));
     String str = await Regula.FaceSDK.matchFacesSimilarityThresholdSplit(
         jsonEncode(response!.results), 0.75);
+    log.i("Checking face done");
 
     Regula.MatchFacesSimilarityThresholdSplit? split =
         Regula.MatchFacesSimilarityThresholdSplit.fromJson(json.decode(str));

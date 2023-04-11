@@ -18,20 +18,20 @@ class HomeView extends StackedView<HomeViewModel> {
       appBar: AppBar(
         title: Row(
           children: [
-            if (viewModel.user != null)
-              Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: CircleAvatar(
-                  radius: 18,
-                  backgroundImage: viewModel.user!.photoUrl != "nil"
-                      ? NetworkImage(viewModel.user!.photoUrl)
-                      : null,
-                  child: viewModel.user!.photoUrl == "nil"
-                      ? Text(viewModel.user!.fullName[0])
-                      : null,
-                ),
-              ),
-            Text(
+            // if (viewModel.user != null)
+            //   Padding(
+            //     padding: const EdgeInsets.only(right: 8.0),
+            //     child: CircleAvatar(
+            //       radius: 18,
+            //       backgroundImage: viewModel.user!.photoUrl != "nil"
+            //           ? NetworkImage(viewModel.user!.photoUrl)
+            //           : null,
+            //       child: viewModel.user!.photoUrl == "nil"
+            //           ? Text(viewModel.user!.fullName[0])
+            //           : null,
+            //     ),
+            //   ),
+            const Text(
               'Secure App',
             ),
           ],
@@ -39,7 +39,9 @@ class HomeView extends StackedView<HomeViewModel> {
         actions: [
           if (viewModel.user != null && viewModel.user!.imgString != null)
             IconButton(
-              onPressed: viewModel.createUpdateFaceData,
+              onPressed: () {
+                viewModel.createUpdateFaceData(isUpdate: true);
+              },
               icon: const Icon(Icons.face),
             ),
           if (viewModel.user != null)

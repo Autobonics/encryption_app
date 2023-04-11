@@ -14,6 +14,7 @@ import 'package:stacked_shared/stacked_shared.dart';
 
 import '../services/encrypt_service.dart';
 import '../services/firestore_service.dart';
+import '../services/local_auth_service.dart';
 import '../services/regula_service.dart';
 import '../services/storage_service.dart';
 import '../services/user_service.dart';
@@ -38,4 +39,5 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => EncryptService());
   locator.registerLazySingleton(() => RegulaService());
   locator.registerLazySingleton(() => StorageService());
+  locator.registerLazySingleton(() => LocalAuthService());
 }

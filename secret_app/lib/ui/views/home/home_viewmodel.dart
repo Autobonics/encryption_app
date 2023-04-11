@@ -6,6 +6,7 @@ import 'package:secret_app/app/app.router.dart';
 import 'package:secret_app/models/appuser.dart';
 import 'package:secret_app/models/chat.dart';
 import 'package:secret_app/services/firestore_service.dart';
+import 'package:secret_app/services/local_auth_service.dart';
 import 'package:secret_app/services/regula_service.dart';
 import 'package:secret_app/services/storage_service.dart';
 import 'package:secret_app/services/user_service.dart';
@@ -23,6 +24,7 @@ class HomeViewModel extends StreamViewModel<List<Chat>> {
   final FirestoreService _firestoreService = FirestoreService();
   final RegulaService _regulaService = RegulaService();
   final StorageService _storageService = StorageService();
+  final LocalAuthService _localAuthService = LocalAuthService();
 
   AppUser? get user => _userService.user;
 
@@ -47,26 +49,34 @@ class HomeViewModel extends StreamViewModel<List<Chat>> {
     _navigationService.replaceWithLoginView();
   }
 
-  void createUpdateFaceData() async {
+  void createUpdateFaceData({bool isUpdate = false}) async {
     setBusy(true);
-    String? img = await _regulaService.setFaceAndGetImagePath();
-    if (img != null) {
-      log.i(img);
-      await _userService.createUpdateUser(user!.copyWith(imgString: img));
-      await _userService.fetchUser();
-      // _regulaService.setUserImage(img);
-      log.i("Showing bottom sheet");
-      _bottomSheetService.showCustomSheet(
-        variant: BottomSheetType.success,
-        title: "Face data updated",
-        description: img ?? "Face unlock is added for extra security.",
-      );
+    bool isProceed = false;
+    if (isUpdate) {
+      isProceed = await _localAuthService.authenticate();
     } else {
-      _bottomSheetService.showCustomSheet(
-        variant: BottomSheetType.alert,
-        title: "Canceled",
-        description: "",
-      );
+      isProceed = true;
+    }
+    if (isProceed) {
+      String? img = await _regulaService.setFaceAndGetImagePath();
+      if (img != null) {
+        log.i(img);
+        await _userService.createUpdateUser(user!.copyWith(imgString: img));
+        await _userService.fetchUser();
+        // _regulaService.setUserImage(img);
+        log.i("Showing bottom sheet");
+        _bottomSheetService.showCustomSheet(
+          variant: BottomSheetType.success,
+          title: "Face data updated",
+          description: img ?? "Face unlock is added for extra security.",
+        );
+      } else {
+        _bottomSheetService.showCustomSheet(
+          variant: BottomSheetType.alert,
+          title: "Canceled",
+          description: "",
+        );
+      }
     }
     setBusy(false);
   }

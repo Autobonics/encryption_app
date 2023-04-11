@@ -22,7 +22,36 @@ class ChatView extends StackedView<ChatViewModel> {
     return Scaffold(
       appBar: AppBar(
         title: Text(chat.name),
-        actions: [],
+        actions: [
+          if (viewModel.receiver != null)
+            Row(
+              children: [
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    viewModel.receiver!.fullName,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w500, fontSize: 17),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: CircleAvatar(
+                    radius: 18,
+                    backgroundImage: viewModel.receiver!.photoUrl != "nil"
+                        ? NetworkImage(viewModel.receiver!.photoUrl)
+                        : null,
+                    child: viewModel.receiver!.photoUrl == "nil"
+                        ? Text(viewModel.receiver!.fullName[0])
+                        : null,
+                  ),
+                ),
+              ],
+            ),
+        ],
       ),
       body: Column(
         children: [

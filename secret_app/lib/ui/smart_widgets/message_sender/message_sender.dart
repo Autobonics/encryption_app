@@ -52,11 +52,12 @@ class MessageSender extends StackedView<MessageSenderModel> {
                 }).toList();
               },
             ),
-            if (viewModel.progress != 0)
-              SizedBox(
+            // if (viewModel.progress != 0 || viewModel.isBusy)
+            if (viewModel.progress != 0 || viewModel.isBusy)
+              const SizedBox(
                   height: 25,
                   width: 25,
-                  child: CircularProgressIndicator(value: viewModel.progress))
+                  child: CircularProgressIndicator(strokeWidth: 2))
             else if (viewModel.fileSelected != null)
               IconButton(
                 icon: const Icon(

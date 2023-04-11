@@ -7,6 +7,7 @@ import 'package:secret_app/services/user_service.dart';
 import 'package:secret_app/services/encrypt_service.dart';
 import 'package:secret_app/services/regula_service.dart';
 import 'package:secret_app/services/storage_service.dart';
+import 'package:secret_app/services/local_auth_service.dart';
 // @stacked-import
 
 import 'test_helpers.mocks.dart';
@@ -20,6 +21,7 @@ import 'test_helpers.mocks.dart';
   MockSpec<EncryptService>(onMissingStub: OnMissingStub.returnDefault),
   MockSpec<RegulaService>(onMissingStub: OnMissingStub.returnDefault),
   MockSpec<StorageService>(onMissingStub: OnMissingStub.returnDefault),
+  MockSpec<LocalAuthService>(onMissingStub: OnMissingStub.returnDefault),
 // @stacked-mock-spec
 ])
 void registerServices() {
@@ -31,6 +33,7 @@ void registerServices() {
   getAndRegisterEncryptService();
   getAndRegisterRegulaService();
   getAndRegisterStorageService();
+  getAndRegisterLocalAuthService();
 // @stacked-mock-register
 }
 
@@ -116,6 +119,13 @@ MockStorageService getAndRegisterStorageService() {
   _removeRegistrationIfExists<StorageService>();
   final service = MockStorageService();
   locator.registerSingleton<StorageService>(service);
+  return service;
+}
+
+MockLocalAuthService getAndRegisterLocalAuthService() {
+  _removeRegistrationIfExists<LocalAuthService>();
+  final service = MockLocalAuthService();
+  locator.registerSingleton<LocalAuthService>(service);
   return service;
 }
 // @stacked-mock-create
